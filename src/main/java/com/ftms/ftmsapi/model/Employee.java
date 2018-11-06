@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "employees")
 public class Employee implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,6 +22,10 @@ public class Employee implements Serializable {
     private String email;
 
     private int number;
+
+    public Long getId() {
+        return id;
+    }
 
     public String getFirstname() {
         return firstname;
