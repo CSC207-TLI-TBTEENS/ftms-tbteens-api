@@ -1,4 +1,4 @@
-package com.ftms.api.model;
+package com.ftms.ftmsapi.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -20,7 +20,6 @@ public class Employee implements Serializable {
     @NotBlank
     private String email;
 
-    @NotBlank
     private int number;
 
     public String getFirstname() {

@@ -1,5 +1,5 @@
-package com.ftms.api.repository;
-import com.ftms.api.model.Employee;
+package com.ftms.ftmsapi.repository;
+import com.ftms.ftmsapi.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
