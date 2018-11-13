@@ -21,7 +21,8 @@ public class Employee implements Serializable {
     @NotBlank
     private String email;
 
-    private int number;
+    @NotBlank
+    private String number;
 
     public Long getId() {
         return id;
@@ -51,11 +52,11 @@ public class Employee implements Serializable {
         this.email = email;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
