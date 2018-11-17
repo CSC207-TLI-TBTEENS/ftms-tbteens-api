@@ -24,6 +24,15 @@ public class Employee implements Serializable {
     @NotBlank
     private String number;
 
+    private boolean active;
+
+    private String position;
+
+    public Employee(){
+        this.active = true;
+        this.position = "worker";
+    }
+
     public Long getId() {
         return id;
     }
@@ -58,6 +67,22 @@ public class Employee implements Serializable {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public boolean getActive(){
+        return active;
+    }
+
+    public void setActive(boolean active){
+        this.active = active;
+    }
+
+    public String getPosition(){
+        return position;
+    }
+
+    public void setPosition(String position){
+        this.position = position;
     }
 
 }
