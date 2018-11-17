@@ -22,14 +22,36 @@ public class Timesheet implements Serializable {
     private String workerName;
 
     @NotBlank
-    private String review;
+    private String companyName;
 
-    public String getReview() {
-        return review;
+    @NotBlank
+    private String startTime;
+
+    @NotBlank
+    private String endTime;
+
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setReview(String review) {
-        this.review = review;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public Long getId() {
