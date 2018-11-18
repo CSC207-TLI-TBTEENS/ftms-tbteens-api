@@ -19,6 +19,7 @@ import java.io.Serializable;
         // End times need to have the option to blank as they get added later.
         private Long endTime;
 
+        @NotBlank
         private Task task;
 
         // GETTERS/SETTERS
