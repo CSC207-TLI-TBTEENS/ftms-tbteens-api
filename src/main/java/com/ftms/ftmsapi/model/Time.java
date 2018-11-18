@@ -19,9 +19,9 @@ public class Time implements  Serializable {
     // End times need to have the option to blank as they get added later.
     private Long endTime;
 
-    @ManyToOne
-    @JoinColumn(name="task_id")
-    private Task task;
+//    @ManyToOne
+//    @JoinColumn(name="task_id")
+//    private Task task;
 
     // GETTERS/SETTERS
     public Long getId(){
