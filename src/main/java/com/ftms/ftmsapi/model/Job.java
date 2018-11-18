@@ -17,9 +17,9 @@ public class Job implements Serializable{
     @NotBlank
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    private Company company;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @MapsId
+//    private Company company;
 
     // GETTERS/SETTERS
     public Long getId() {
@@ -34,11 +34,11 @@ public class Job implements Serializable{
         this.description = description;
     }
 
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
+//    public Company getCompany() {
+//        return company;
+//    }
+//
+//    public void setCompany(Company company) {
+//        this.company = company;
+//    }
 }
