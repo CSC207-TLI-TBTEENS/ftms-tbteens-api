@@ -19,6 +19,8 @@ public class Job implements Serializable{
 
     private Company company;
 
+    private String siteName;
+
     // GETTERS/SETTERS
     public Long getId() {
         return id;
@@ -40,5 +42,13 @@ public class Job implements Serializable{
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public String getSiteName() {
+        return siteName;
+    }
+
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
     }
 }
