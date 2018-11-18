@@ -19,6 +19,9 @@ public class Job implements Serializable{
 
     private Company company;
 
+    @NotBlank
+    private String siteName;
+
     // GETTERS/SETTERS
     public Long getId() {
         return id;
