@@ -24,8 +24,10 @@ public class Employee implements Serializable {
     @NotBlank
     private String number;
 
+    @NotBlank
     private boolean active;
 
+    @NotBlank
     private String position;
 
     public Employee(){
