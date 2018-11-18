@@ -1,9 +1,9 @@
 package com.ftms.ftmsapi.repository;
-import com.ftms.ftmsapi.model.Time;
+import com.ftms.ftmsapi.model.CurrSession;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TimeRepository extends JpaRepository<Time, Long> {
+public interface CurrSessionRepository extends JpaRepository<CurrSession, Long> {
 
 }
