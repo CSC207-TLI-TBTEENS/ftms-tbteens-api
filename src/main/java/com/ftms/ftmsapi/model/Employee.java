@@ -30,7 +30,7 @@ public class Employee implements Serializable {
 
     public Employee(){
         this.active = true;
-        this.position = "worker";
+        this.position = "runner";
     }
 
     public Long getId() {
