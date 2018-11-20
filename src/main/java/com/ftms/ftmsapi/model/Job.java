@@ -17,10 +17,8 @@ public class Job implements Serializable{
     @NotBlank
     private String description;
 
-    @NotBlank
     private Company company;
 
-    @NotBlank
     private String siteName;
 
     // GETTERS/SETTERS

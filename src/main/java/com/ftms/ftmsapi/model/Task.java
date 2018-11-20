@@ -13,10 +13,8 @@ public class Task implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private Employee employee;
 
-    @NotBlank
     private Job job;
 
     private String description;
