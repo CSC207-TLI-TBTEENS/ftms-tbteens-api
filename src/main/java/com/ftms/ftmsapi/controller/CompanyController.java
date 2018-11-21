@@ -2,7 +2,6 @@ package com.ftms.ftmsapi.controller;
 
 import com.ftms.ftmsapi.exception.ResourceNotFoundException;
 import com.ftms.ftmsapi.model.Company;
-import com.ftms.ftmsapi.payload.ApiResponse;
 import com.ftms.ftmsapi.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
