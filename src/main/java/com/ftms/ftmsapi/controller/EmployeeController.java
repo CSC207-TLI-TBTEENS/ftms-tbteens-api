@@ -47,13 +47,18 @@ public class EmployeeController {
 
     // Delete an employee
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
+    public List<String> deleteEmployee (@PathVariable Long id) {
+        ArrayList<String> success =  new ArrayList<>();
+        ArrayList<String> failure =  new ArrayList<>();
+        success.add("202 ACCEPTED");
+        success.add("400 BAD REQUEST");
+
         try {
             Employee employee = employeeRepository.getOne(id);
             employeeRepository.delete(employee);
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return success;
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return failure;
         }
     }
 

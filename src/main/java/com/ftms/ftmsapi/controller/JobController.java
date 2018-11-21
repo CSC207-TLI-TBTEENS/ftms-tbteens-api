@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class JobController {
-
     @Autowired
     JobRepository jobRepository;
 }
