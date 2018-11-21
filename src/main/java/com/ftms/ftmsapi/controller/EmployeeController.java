@@ -25,7 +25,7 @@ public class EmployeeController {
     @Autowired
     EmployeeRepository employeeRepository;
 
-    @GetMapping("/user/me")
+    @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public UserSummary getCurrentUser(@CurrentUser EmployeePrincipal currentUser) {
         UserSummary userSummary = new UserSummary(currentUser.getId(),
