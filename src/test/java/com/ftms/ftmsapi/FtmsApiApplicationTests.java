@@ -8,9 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class FtmsApiApplicationTests {
-
-	@Test
-	public void contextLoads(classpath:$env:DOWNLOADSECUREFILE_SECUREFILEPATH) {
+	
+	public void contextLoads() {
 	}
-
 }
