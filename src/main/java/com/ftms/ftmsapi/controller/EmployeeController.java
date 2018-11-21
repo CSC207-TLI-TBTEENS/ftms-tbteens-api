@@ -1,15 +1,17 @@
 package com.ftms.ftmsapi.controller;
 
+import com.ftms.ftmsapi.model.Company;
 import com.ftms.ftmsapi.model.Employee;
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Task;
 import com.ftms.ftmsapi.repository.EmployeeRepository;
 import com.ftms.ftmsapi.exception.ResourceNotFoundException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.ArrayList;
@@ -34,13 +36,37 @@ public class EmployeeController {
 
     // Delete an employee
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEmployee (@PathVariable Long id) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", id));
+    public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
+        try {
+            Employee employee = employeeRepository.getOne(id);
+            employeeRepository.delete(employee);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
-        employeeRepository.delete(employee);
+    // Edit an employee's details
+    @PutMapping("/{id}")
+    public List<String> editEmployee (@PathVariable Long id, @RequestParam String firstName,
+                                      @RequestParam String lastName, @RequestParam String email,
+                                      @RequestParam String phone) {
+        ArrayList<String> value = new ArrayList<>();
+        value.add("Hello!");
+        try {
+            Employee findEmployee = employeeRepository.getOne(id);
 
-        return ResponseEntity.ok().build();
+            findEmployee.setFirstname(firstName);
+            findEmployee.setLastname(lastName);
+            findEmployee.setEmail(email);
+            findEmployee.setNumber(phone);
+            employeeRepository.save(findEmployee);
+            return value;
+//            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (EntityNotFoundException e) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return value;
+        }
     }
 
     @PostMapping("/employees/jobs")
