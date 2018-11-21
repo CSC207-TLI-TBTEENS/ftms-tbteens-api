@@ -17,3 +17,6 @@ steps:
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
     goals: 'package'
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: application.properties
