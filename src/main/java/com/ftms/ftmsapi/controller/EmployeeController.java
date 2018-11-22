@@ -74,7 +74,6 @@ public class EmployeeController {
 
             findEmployee.setFirstname(firstName);
             findEmployee.setLastname(lastName);
-            findEmployee.setEmail(email);
             findEmployee.setNumber(phone);
             employeeRepository.save(findEmployee);
             return value;

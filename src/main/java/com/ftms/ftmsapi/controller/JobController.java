@@ -74,7 +74,7 @@ public class JobController {
         }
         else {
             for (Task task : tasks) {
-                if (task.getJob().getId() == job.getId()){
+                if (task.getJob().getId().equals(job.getId())) {
                     jobtasks.add(task);
                 }
                 
@@ -82,8 +82,6 @@ public class JobController {
         }
         return jobtasks;
     }
-
-
 
      // Get all Jobs
      @GetMapping("/jobs")
