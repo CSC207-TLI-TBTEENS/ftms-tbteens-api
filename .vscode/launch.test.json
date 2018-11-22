@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "ftms-api",
+                "projectName": "ftms-api",
+                "workingDirectory": "/home/ignas/Desktop/ftms-tbteens-api",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "ftms-api",
+                "projectName": "ftms-api",
+                "workingDirectory": "/home/ignas/Desktop/ftms-tbteens-api",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}

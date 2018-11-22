@@ -2,10 +2,18 @@ package com.ftms.ftmsapi.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Email;
+import org.hibernate.annotations.NaturalId;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "employees")
+@Table(name = "employees", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "email"
+        })
+})
 public class Employee implements Serializable {
 
     @Id
@@ -18,7 +26,9 @@ public class Employee implements Serializable {
     @NotBlank
     private String lastname;
 
+    @NaturalId
     @NotBlank
+    @Email
     private String email;
 
     @NotBlank
@@ -28,7 +38,26 @@ public class Employee implements Serializable {
 
     private String position;
 
-    public Employee(){
+    @NotBlank
+    private String password;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
+    public Employee () {
+        this.active = true;
+        this.position = "runner";
+    }
+
+    public Employee(String fname, String lname, String email, String number, String password){
+        this.firstname = fname;
+        this.lastname = lname;
+        this.email = email;
+        this.password = password;
+        this.number = number;
         this.active = true;
         this.position = "runner";
     }
@@ -61,6 +90,10 @@ public class Employee implements Serializable {
         this.email = email;
     }
 
+    public String getPassword() { return password; }
+
+    public void setPassword(String password) { this.password = password; }
+
     public String getNumber() {
         return number;
     }
@@ -68,6 +101,10 @@ public class Employee implements Serializable {
     public void setNumber(String number) {
         this.number = number;
     }
+
+    public Set<Role> getRoles() { return roles; }
+
+    public void setRoles(Set<Role> roles) { this.roles = roles; }
 
     public boolean getActive(){
         return active;
