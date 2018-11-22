@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.ftms.ftmsapi.exception.ResourceNotFoundException;
+import com.ftms.ftmsapi.model.Company;
 import com.ftms.ftmsapi.model.Employee;
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Task;
@@ -14,6 +15,7 @@ import com.ftms.ftmsapi.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,9 +42,15 @@ public class JobController {
         return employees;
     }
 
+     // Get all Jobs
+     @GetMapping("/jobs")
+     public List<Job> getAllJobs() {
+         return jobRepository.findAll();
+     }
+
     // Delete a Job
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEmployee (@PathVariable Long id) {
+    public ResponseEntity<?> deleteJob (@PathVariable Long id) {
         Job job = jobRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Job", "id", id));
 
