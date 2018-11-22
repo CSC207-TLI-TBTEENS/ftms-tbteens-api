@@ -28,7 +28,7 @@ public class JobController {
     @Autowired
     JobRepository jobRepository;
 
-    @PostMapping("/employees/jobs")
+    @GetMapping("/employees/jobs")
     public List<Employee> retrieveEmployeeFromJobs(@Valid @RequestBody Job job, List<Task> tasks) {
         ArrayList<Employee> employees = new ArrayList<>();
         if (!jobRepository.findAll().contains(job)) {
@@ -42,7 +42,7 @@ public class JobController {
         return employees;
     }
 
-    @PostMapping("/tasks/jobs")
+    @GetMapping("/tasks/jobs")
     public List<Task> retrieveTasksFromJobs(@Valid @RequestBody Job job, List<Task> tasks) {
         ArrayList<Task> jobtasks = new ArrayList<>();
         if (!jobRepository.findAll().contains(job)) {
@@ -58,6 +58,32 @@ public class JobController {
         }
         return jobtasks;
     }
+
+    // Create a new company
+    @PostMapping("/jobs")
+    public Job createJob(@Valid @RequestBody Job job) {
+        System.out.println("HEY");
+        return jobRepository.save(job);
+    }
+
+    @PostMapping("/jobsassign")
+    public List<Task> assignJob(@Valid @RequestBody Job job, List<Task> tasks) {
+        ArrayList<Task> jobtasks = new ArrayList<>();
+        if (!jobRepository.findAll().contains(job)) {
+            System.out.println("Job not found!");
+        }
+        else {
+            for (Task task : tasks) {
+                if (task.getJob().getId() == job.getId()){
+                    jobtasks.add(task);
+                }
+                
+            }
+        }
+        return jobtasks;
+    }
+
+
 
      // Get all Jobs
      @GetMapping("/jobs")
