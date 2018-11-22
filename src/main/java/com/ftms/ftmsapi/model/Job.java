@@ -15,6 +15,9 @@ public class Job implements Serializable{
     private Long id;
 
     @NotBlank
+    private String jobTitle;
+
+    @NotBlank
     private String description;
 
     private Company company;
@@ -22,6 +25,14 @@ public class Job implements Serializable{
     private String siteName;
 
     // GETTERS/SETTERS
+    public String getJobTitle() {
+        return this.jobTitle;
+    }
+
+    public void setJobTitle(String title) {
+        this.jobTitle = title;
+    }
+
     public Long getId() {
         return id;
     }
