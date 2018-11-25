@@ -13,7 +13,7 @@ public class Task implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Employee employee;
+    private User employee;
 
     private Job job;
 
@@ -27,11 +27,11 @@ public class Task implements Serializable{
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    public Employee getEmployee() {
+    public User getEmployee() {
         return employee;
     }
 
-    public void setEmployee(Employee employee) {
+    public void setEmployee(User employee) {
         this.employee = employee;
     }
 

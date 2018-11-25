@@ -1,7 +1,7 @@
 package com.ftms.ftmsapi.security;
 
-import com.ftms.ftmsapi.model.Employee;
-import com.ftms.ftmsapi.repository.EmployeeRepository;
+import com.ftms.ftmsapi.model.User;
+import com.ftms.ftmsapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CustomEmployeeDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    EmployeeRepository employeeRepository;
+    UserRepository userRepository;
 
     @Override
     @Transactional
@@ -21,21 +21,21 @@ public class CustomEmployeeDetailsService implements UserDetailsService {
             throws UsernameNotFoundException {
 
         // Let people login with email
-        Employee user = employeeRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with email : " + email)
                 );
 
-        return EmployeePrincipal.create(user);
+        return UserPrincipal.create(user);
     }
 
     // This method is used by JWTAuthenticationFilter
     @Transactional
     public UserDetails loadUserById(Long id) {
-        Employee user = employeeRepository.findById(id).orElseThrow(
+        User user = userRepository.findById(id).orElseThrow(
                 () -> new UsernameNotFoundException("User not found with id : " + id)
         );
 
-        return EmployeePrincipal.create(user);
+        return UserPrincipal.create(user);
     }
 }

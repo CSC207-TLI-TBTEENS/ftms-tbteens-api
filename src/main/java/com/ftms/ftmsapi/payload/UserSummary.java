@@ -5,12 +5,16 @@ public class UserSummary {
     private String email;
     private String fname;
     private String lname;
+    private String role;
 
-    public UserSummary(Long id, String email, String fname, String lname) {
+    public UserSummary(Long id, String email, String fname, String lname,
+                       String role) {
         this.id = id;
         this.email = email;
         this.fname = fname;
         this.lname = lname;
+        this.role = role;
+
     }
 
     public Long getId() {
@@ -43,5 +47,13 @@ public class UserSummary {
 
     public void setLastname(String lname) {
         this.lname = lname;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

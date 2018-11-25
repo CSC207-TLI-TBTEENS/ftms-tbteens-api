@@ -4,6 +4,7 @@ import com.ftms.ftmsapi.exception.ResourceNotFoundException;
 import com.ftms.ftmsapi.model.Company;
 import com.ftms.ftmsapi.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import javax.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class CompanyController {
     @Autowired
     CompanyRepository companyRepository;
