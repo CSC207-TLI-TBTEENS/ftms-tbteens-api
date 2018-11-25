@@ -1,17 +1,12 @@
 package com.ftms.ftmsapi.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ftms.ftmsapi.model.Role;
 import com.ftms.ftmsapi.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class UserPrincipal implements UserDetails {
     private Long id;
@@ -22,7 +17,7 @@ public class UserPrincipal implements UserDetails {
 
     private String email;
 
-    private Set<Role> roles;
+    private String role;
 
     @JsonIgnore
     private String number;
@@ -33,7 +28,7 @@ public class UserPrincipal implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(Long id, String firstname, String lastname,
-                         String number, String email, String password, String roles,
+                         String number, String email, String password, String role,
                          Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.firstname = firstname;
@@ -41,14 +36,13 @@ public class UserPrincipal implements UserDetails {
         this.email = email;
         this.number = number;
         this.password = password;
-        this.roles = roles;
+        this.role = role;
         this.authorities = authorities;
     }
 
     public static UserPrincipal create(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
-                new SimpleGrantedAuthority(role.getName().name())
-        ).collect(Collectors.toList());
+        List<GrantedAuthority> authorities = new ArrayList<>
+                (Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
 
         return new UserPrincipal(
                 user.getId(),
@@ -57,7 +51,7 @@ public class UserPrincipal implements UserDetails {
                 user.getEmail(),
                 user.getNumber(),
                 user.getPassword(),
-                user.getRoles(),
+                user.getRole(),
                 authorities
         );
     }
@@ -82,8 +76,8 @@ public class UserPrincipal implements UserDetails {
         return lastname;
     }
 
-    public Set<Role> getRole() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
     @Override

@@ -1,14 +1,10 @@
 package com.ftms.ftmsapi.controller;
 
-import com.ftms.ftmsapi.exception.AppException;
-import com.ftms.ftmsapi.model.Role;
-import com.ftms.ftmsapi.model.RoleName;
 import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.payload.ApiResponse;
 import com.ftms.ftmsapi.payload.JwtAuthenticationResponse;
 import com.ftms.ftmsapi.payload.LoginRequest;
 import com.ftms.ftmsapi.payload.SignUpRequest;
-import com.ftms.ftmsapi.repository.RoleRepository;
 import com.ftms.ftmsapi.repository.UserRepository;
 import com.ftms.ftmsapi.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,9 +31,6 @@ public class AuthController {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -76,16 +68,10 @@ public class AuthController {
 
         // Creating user's account
         User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(),
-                signUpRequest.getEmail(), signUpRequest.getNumber(), signUpRequest.getPassword());
+                signUpRequest.getEmail(), signUpRequest.getNumber(),
+                signUpRequest.getPassword(), signUpRequest.getRole());
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        RoleName role = RoleName.valueOf(signUpRequest.getRole());
-
-        Role userRole = roleRepository.findByName(role)
-                .orElseThrow(() -> new AppException("User Role not set."));
-
-        user.setRoles(Collections.singleton(userRole));
 
         User result = userRepository.save(user);
 
