@@ -1,7 +1,8 @@
 package com.ftms.ftmsapi.security;
 
-import com.ftms.ftmsapi.model.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ftms.ftmsapi.model.Role;
+import com.ftms.ftmsapi.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,9 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class EmployeePrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails {
     private Long id;
 
     private String firstname;
@@ -19,6 +21,8 @@ public class EmployeePrincipal implements UserDetails {
     private String lastname;
 
     private String email;
+
+    private Set<Role> roles;
 
     @JsonIgnore
     private String number;
@@ -28,28 +32,32 @@ public class EmployeePrincipal implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public EmployeePrincipal(Long id, String firstname, String lastname, String number, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String firstname, String lastname,
+                         String number, String email, String password, String roles,
+                         Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.number = number;
         this.password = password;
+        this.roles = roles;
         this.authorities = authorities;
     }
 
-    public static EmployeePrincipal create(Employee user) {
+    public static UserPrincipal create(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
                 new SimpleGrantedAuthority(role.getName().name())
         ).collect(Collectors.toList());
 
-        return new EmployeePrincipal(
+        return new UserPrincipal(
                 user.getId(),
                 user.getFirstname(),
                 user.getLastname(),
                 user.getEmail(),
                 user.getNumber(),
                 user.getPassword(),
+                user.getRoles(),
                 authorities
         );
     }
@@ -72,6 +80,10 @@ public class EmployeePrincipal implements UserDetails {
 
     public String getLastname() {
         return lastname;
+    }
+
+    public Set<Role> getRole() {
+        return roles;
     }
 
     @Override
@@ -113,7 +125,7 @@ public class EmployeePrincipal implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EmployeePrincipal that = (EmployeePrincipal) o;
+        UserPrincipal that = (UserPrincipal) o;
         return Objects.equals(id, that.id);
     }
 

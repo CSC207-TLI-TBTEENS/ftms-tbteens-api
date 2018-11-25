@@ -6,11 +6,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.ftms.ftmsapi.exception.ResourceNotFoundException;
-import com.ftms.ftmsapi.model.Employee;
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Task;
+import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.repository.JobRepository;
-import com.ftms.ftmsapi.repository.TaskRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +28,8 @@ public class JobController {
     JobRepository jobRepository;
 
     @GetMapping("/employees/jobs")
-    public List<Employee> retrieveEmployeeFromJobs(@Valid @RequestBody Job job, List<Task> tasks) {
-        ArrayList<Employee> employees = new ArrayList<>();
+    public List<User> retrieveEmployeeFromJobs(@Valid @RequestBody Job job, List<Task> tasks) {
+        ArrayList<User> employees = new ArrayList<>();
         if (!jobRepository.findAll().contains(job)) {
             System.out.println("Job not found!");
         }

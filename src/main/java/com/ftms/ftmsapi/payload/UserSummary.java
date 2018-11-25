@@ -1,16 +1,23 @@
 package com.ftms.ftmsapi.payload;
 
+import com.ftms.ftmsapi.model.Role;
+
+import java.util.Set;
+
 public class UserSummary {
     private Long id;
     private String email;
     private String fname;
     private String lname;
+    private Set<Role> roles;
 
-    public UserSummary(Long id, String email, String fname, String lname) {
+    public UserSummary(Long id, String email, String fname, String lname, Set<Role> roles) {
         this.id = id;
         this.email = email;
         this.fname = fname;
         this.lname = lname;
+        this.roles = roles;
+
     }
 
     public Long getId() {
@@ -43,5 +50,13 @@ public class UserSummary {
 
     public void setLastname(String lname) {
         this.lname = lname;
+    }
+
+    public Set<Role> getRole() {
+        return roles;
+    }
+
+    public void setRole(Set<Role> roles) {
+        this.roles = roles;
     }
 }

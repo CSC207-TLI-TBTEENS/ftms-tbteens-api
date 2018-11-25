@@ -9,12 +9,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "employees", uniqueConstraints = {
+@Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
                 "email"
         })
 })
-public class Employee implements Serializable {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,12 +47,12 @@ public class Employee implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public Employee () {
+    public User () {
         this.active = true;
         this.position = "runner";
     }
 
-    public Employee(String fname, String lname, String email, String number, String password){
+    public User(String fname, String lname, String email, String number, String password){
         this.firstname = fname;
         this.lastname = lname;
         this.email = email;

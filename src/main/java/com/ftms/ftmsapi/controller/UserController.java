@@ -1,16 +1,14 @@
 package com.ftms.ftmsapi.controller;
 
-import com.ftms.ftmsapi.model.Employee;
+import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.payload.UserSummary;
-import com.ftms.ftmsapi.repository.EmployeeRepository;
+import com.ftms.ftmsapi.repository.UserRepository;
 import com.ftms.ftmsapi.security.CurrentUser;
-import com.ftms.ftmsapi.security.EmployeePrincipal;
+import com.ftms.ftmsapi.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Task;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -21,28 +19,29 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/employees")
-public class EmployeeController {
+public class UserController {
     @Autowired
-    EmployeeRepository employeeRepository;
+    UserRepository userRepository;
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public UserSummary getCurrentUser(@CurrentUser EmployeePrincipal currentUser) {
+    public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
         UserSummary userSummary = new UserSummary(currentUser.getId(),
-                currentUser.getUsername(), currentUser.getFirstname(), currentUser.getLastname());
+                currentUser.getUsername(), currentUser.getFirstname(),
+                currentUser.getLastname(), currentUser.getRole());
         return userSummary;
     }
 
     // Get all employees
     @GetMapping("")
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+    public List<User> getAllEmployees() {
+        return userRepository.findAll();
     }
 
     // Create a new employee
     @PostMapping("")
-    public Employee createEmployee(@Valid @RequestBody Employee employee) {
-        return employeeRepository.save(employee);
+    public User createEmployee(@Valid @RequestBody User employee) {
+        return userRepository.save(employee);
     }
 
     // Delete an employee
@@ -54,8 +53,8 @@ public class EmployeeController {
         success.add("400 BAD REQUEST");
 
         try {
-            Employee employee = employeeRepository.getOne(id);
-            employeeRepository.delete(employee);
+            User employee = userRepository.getOne(id);
+            userRepository.delete(employee);
             return success;
         } catch (EntityNotFoundException e) {
             return failure;
@@ -70,12 +69,12 @@ public class EmployeeController {
         ArrayList<String> value = new ArrayList<>();
         value.add("Hello!");
         try {
-            Employee findEmployee = employeeRepository.getOne(id);
+            User findEmployee = userRepository.getOne(id);
 
             findEmployee.setFirstname(firstName);
             findEmployee.setLastname(lastName);
             findEmployee.setNumber(phone);
-            employeeRepository.save(findEmployee);
+            userRepository.save(findEmployee);
             return value;
 //            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (EntityNotFoundException e) {
@@ -85,14 +84,14 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees/jobs")
-    public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody Employee employee, List<Task> tasks) {
+    public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody User user, List<Task> tasks) {
         ArrayList<Job> jobs = new ArrayList<>();
-        if (!employeeRepository.findAll().contains(employee)) {
-            System.out.println("Employee not found!");
+        if (!userRepository.findAll().contains(user)) {
+            System.out.println("User not found!");
         }
         else {
             for (Task task : tasks) {
-                if (task.getEmployee().getId().equals(employee.getId())) {
+                if (task.getEmployee().getId().equals(user.getId())) {
                     jobs.add(task.getJob());
                 }
             }

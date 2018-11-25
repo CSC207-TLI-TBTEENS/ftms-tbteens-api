@@ -1,5 +1,5 @@
 package com.ftms.ftmsapi.repository;
-import com.ftms.ftmsapi.model.Employee;
+import com.ftms.ftmsapi.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,10 +8,10 @@ import java.util.Optional;
 
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    Optional<Employee> findByEmail(String email);
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
 
-    List<Employee> findByIdIn(List<Long> userIds);
+    List<User> findByIdIn(List<Long> userIds);
 
     Boolean existsByEmail(String email);
 }
