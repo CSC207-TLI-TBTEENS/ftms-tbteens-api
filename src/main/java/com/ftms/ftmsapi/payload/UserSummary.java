@@ -8,7 +8,7 @@ public class UserSummary {
     private String role;
 
     public UserSummary(Long id, String email, String fname, String lname,
-                       String role) {
+                       String role, boolean isActive) {
         this.id = id;
         this.email = email;
         this.fname = fname;
