@@ -20,7 +20,8 @@ public class TimesheetController {
 
     // Create a new employee
     @PostMapping("")
-    public Timesheet createTimesheet(@Valid @RequestBody Timesheet employee) {
-        return timesheetRepository.save(employee);
+    public Timesheet createTimesheet(@Valid @RequestBody Timesheet timesheet) {
+        System.out.println("jnadkfbgfbgsdn");
+        return timesheetRepository.save(timesheet);
     }
 }

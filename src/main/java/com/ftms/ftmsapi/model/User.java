@@ -9,12 +9,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "employees", uniqueConstraints = {
+@Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
                 "email"
         })
 })
-public class Employee implements Serializable {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,30 +36,26 @@ public class Employee implements Serializable {
 
     private boolean active;
 
-    private String position;
 
     @NotBlank
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    @NotBlank
+    private String role;
 
-    public Employee () {
+    public User () {
         this.active = true;
-        this.position = "runner";
     }
 
-    public Employee(String fname, String lname, String email, String number, String password){
+    public User(String fname, String lname, String email, String number,
+                String password, String role){
         this.firstname = fname;
         this.lastname = lname;
         this.email = email;
         this.password = password;
         this.number = number;
+        this.role = role;
         this.active = true;
-        this.position = "runner";
     }
 
     public Long getId() {
@@ -102,9 +98,9 @@ public class Employee implements Serializable {
         this.number = number;
     }
 
-    public Set<Role> getRoles() { return roles; }
+    public String getRole() { return role; }
 
-    public void setRoles(Set<Role> roles) { this.roles = roles; }
+    public void setRole(String role) { this.role = role; }
 
     public boolean getActive(){
         return active;
@@ -112,14 +108,6 @@ public class Employee implements Serializable {
 
     public void setActive(boolean active){
         this.active = active;
-    }
-
-    public String getPosition(){
-        return position;
-    }
-
-    public void setPosition(String position){
-        this.position = position;
     }
 
 }

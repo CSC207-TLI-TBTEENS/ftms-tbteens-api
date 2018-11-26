@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 
 @Entity
-@Table(name="timesheets")
+@Table(name="timesheet")
 public class Timesheet implements Serializable{
     // INSTANCE FIELDS
     @Id
@@ -15,44 +15,41 @@ public class Timesheet implements Serializable{
 
     private String approvalStatus;
 
-    private Employee employee;
-
-    private Job job;
+    private Long employeeID;
+    
+    private Long jobID;
 
     public Long getId() {
         return id;
     }
 
+
     /**
-     * @return the job
+     * @return the employeeID
      */
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    public Job getJob() {
-        return job;
+    public Long getEmployeeID() {
+        return employeeID;
     }
 
     /**
-     * @param job the job to set
+     * @param employeeID the employeeID to set
      */
-    public void setJob(Job job) {
-        this.job = job;
+    public void setEmployeeID(Long employeeID) {
+        this.employeeID = employeeID;
     }
 
     /**
-     * @return the employee
+     * @return the jobID
      */
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    public Employee getEmployee() {
-        return employee;
+    public Long getJobID() {
+        return jobID;
     }
 
     /**
-     * @param employee the employee to set
+     * @param jobID the jobID to set
      */
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setJobID(Long jobID) {
+        this.jobID = jobID;
     }
 
     /**
@@ -69,4 +66,5 @@ public class Timesheet implements Serializable{
         this.approvalStatus = approvalStatus;
     }
 
+    // GETTERS/SETTERS
 }

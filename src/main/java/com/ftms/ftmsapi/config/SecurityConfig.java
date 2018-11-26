@@ -1,12 +1,11 @@
 package com.ftms.ftmsapi.config;
 
-import com.ftms.ftmsapi.security.CustomEmployeeDetailsService;
+import com.ftms.ftmsapi.security.CustomUserDetailsService;
 import com.ftms.ftmsapi.security.JwtAuthenticationEntryPoint;
 import com.ftms.ftmsapi.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -28,7 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    CustomEmployeeDetailsService customEmployeeDetailsService;
+    CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
@@ -41,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
-                .userDetailsService(customEmployeeDetailsService)
+                .userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
 

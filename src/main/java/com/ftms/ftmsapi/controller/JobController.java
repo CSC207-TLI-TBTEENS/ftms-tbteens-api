@@ -1,26 +1,43 @@
 package com.ftms.ftmsapi.controller;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONWrappedObject;
 import com.ftms.ftmsapi.exception.ResourceNotFoundException;
-import com.ftms.ftmsapi.model.Employee;
+import com.ftms.ftmsapi.model.Company;
 import com.ftms.ftmsapi.model.Job;
+import com.ftms.ftmsapi.model.Selection;
 import com.ftms.ftmsapi.model.Timesheet;
+import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.repository.JobRepository;
 import com.ftms.ftmsapi.repository.TimesheetRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jackson.JsonObjectSerializer;
+import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -31,10 +48,22 @@ public class JobController {
     TimesheetRepository timesheetRepository;
     @Autowired
     TimesheetController timesheetController;
+ 
+    private Job curJob;
+    private User curEmp;
 
+    @PutMapping("/jobset")
+    void settingJob(@RequestBody String selection) throws JsonParseException, JsonMappingException, IOException {
+        curJob = new ObjectMapper().readValue(selection, Job.class);
+        
+    }
+    @PutMapping("/empset")
+    void settingEmp(@RequestBody String selection) throws JsonParseException, JsonMappingException, IOException {
+        curEmp = new ObjectMapper().readValue(selection, User.class);
+    }
     @GetMapping("/employees/jobs")
-    public List<Employee> retrieveEmployeeFromJobs(@Valid @RequestBody Job job) {
-        ArrayList<Employee> employees = new ArrayList<>();
+    public List<User> retrieveEmployeeFromJobs(@Valid @RequestBody Job job) {
+        ArrayList<User> employees = new ArrayList<>();
         List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(job);
         if (!jobRepository.findAll().contains(job)) {
             System.out.println("Job not found!");
@@ -56,7 +85,7 @@ public class JobController {
         }
         else {
             for (Timesheet timesheet : timesheets) {
-                if (timesheet.getJob().getId() == job.getId()){
+                if (timesheet.getJobID() == job.getId()){
                     timesheetsJob.add(timesheet);
                 }
                 
@@ -71,19 +100,17 @@ public class JobController {
         return jobRepository.save(job);
     }
 
-    @PostMapping("/jobsassign")
-    void assignJob(@Valid @RequestBody Job job, Employee employee) {
-        if (!jobRepository.findAll().contains(job)) {
-            System.out.println("Job not found!");
-        }
-        else {
-            Timesheet timesheet = new Timesheet();
-            timesheet.setJob(job);
-            timesheet.setEmployee(employee);
-            timesheet.setApprovalStatus("Not reviewed");
-            timesheetController.createTimesheet(timesheet);
-        }
+    @PutMapping("/jobsassign")
+    void assignJob(@Valid @RequestBody Selection selection) {
+        System.out.println(selection.getEmployee().getFirstname());
+        System.out.println(selection.getJob().getDescription());
+        Timesheet timesheet = new Timesheet();
+        timesheet.setJobID(selection.getJob().getId());
+        timesheet.setEmployeeID(selection.getEmployee().getId());
+        timesheet.setApprovalStatus("Not reviewed");
+        timesheetController.createTimesheet(timesheet);
         
+        System.out.println(timesheet);
     }
 
     // Get all Jobs
