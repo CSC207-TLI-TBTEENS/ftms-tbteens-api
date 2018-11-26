@@ -15,9 +15,9 @@ public class Timesheet implements Serializable{
 
     private String approvalStatus;
 
-    private Long employeeID;
+    private Long employeeId;
     
-    private Long jobID;
+    private Long jobId;
 
     public Long getId() {
         return id;
@@ -25,31 +25,31 @@ public class Timesheet implements Serializable{
 
 
     /**
-     * @return the employeeID
+     * @return the EmployeeId
      */
-    public Long getEmployeeID() {
-        return employeeID;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
     /**
-     * @param employeeID the employeeID to set
+     * @param EmployeeId the EmployeeId to set
      */
-    public void setEmployeeID(Long employeeID) {
-        this.employeeID = employeeID;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
     /**
      * @return the jobID
      */
-    public Long getJobID() {
-        return jobID;
+    public Long getJobId() {
+        return jobId;
     }
 
     /**
-     * @param jobID the jobID to set
+     * @param jobId the jobId to set
      */
-    public void setJobID(Long jobID) {
-        this.jobID = jobID;
+    public void setJobId(Long jobId) {
+        this.jobId = jobId;
     }
 
     /**

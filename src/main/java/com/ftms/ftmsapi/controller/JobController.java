@@ -23,6 +23,7 @@ import com.ftms.ftmsapi.model.Timesheet;
 import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.repository.JobRepository;
 import com.ftms.ftmsapi.repository.TimesheetRepository;
+import com.ftms.ftmsapi.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JsonObjectSerializer;
@@ -48,29 +49,24 @@ public class JobController {
     TimesheetRepository timesheetRepository;
     @Autowired
     TimesheetController timesheetController;
+    @Autowired
+    UserRepository userRepository;
  
-    private Job curJob;
-    private User curEmp;
-
-    @PutMapping("/jobset")
-    void settingJob(@RequestBody String selection) throws JsonParseException, JsonMappingException, IOException {
-        curJob = new ObjectMapper().readValue(selection, Job.class);
-        
-    }
-    @PutMapping("/empset")
-    void settingEmp(@RequestBody String selection) throws JsonParseException, JsonMappingException, IOException {
-        curEmp = new ObjectMapper().readValue(selection, User.class);
-    }
     @GetMapping("/employees/jobs")
     public List<User> retrieveEmployeeFromJobs(@Valid @RequestBody Job job) {
         ArrayList<User> employees = new ArrayList<>();
         List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(job);
+        List<User> allEmployees = userRepository.findAll();
         if (!jobRepository.findAll().contains(job)) {
             System.out.println("Job not found!");
         }
         else {
             for (Timesheet timesheet : timesheetsJob) {
-                employees.add(timesheet.getEmployee());
+                for (User emp: allEmployees){
+                    if (emp.getId() == timesheet.getEmployeeId())
+                        employees.add(emp);
+                }
+                
             }
         }
         return employees;
@@ -85,7 +81,7 @@ public class JobController {
         }
         else {
             for (Timesheet timesheet : timesheets) {
-                if (timesheet.getJobID() == job.getId()){
+                if (timesheet.getJobId() == job.getId()){
                     timesheetsJob.add(timesheet);
                 }
                 
@@ -102,15 +98,12 @@ public class JobController {
 
     @PutMapping("/jobsassign")
     void assignJob(@Valid @RequestBody Selection selection) {
-        System.out.println(selection.getEmployee().getFirstname());
-        System.out.println(selection.getJob().getDescription());
         Timesheet timesheet = new Timesheet();
-        timesheet.setJobID(selection.getJob().getId());
-        timesheet.setEmployeeID(selection.getEmployee().getId());
+        timesheet.setJobId(selection.getJob().getId());
+        timesheet.setEmployeeId(selection.getEmployee().getId());
         timesheet.setApprovalStatus("Not reviewed");
         timesheetController.createTimesheet(timesheet);
-        
-        System.out.println(timesheet);
+
     }
 
     // Get all Jobs
