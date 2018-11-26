@@ -27,7 +27,7 @@ public class UserController {
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
         UserSummary userSummary = new UserSummary(currentUser.getId(),
                 currentUser.getUsername(), currentUser.getFirstname(),
-                currentUser.getLastname(), currentUser.getRole());
+                currentUser.getLastname(), currentUser.getRole(), currentUser.getIsActive());
         return userSummary;
     }
 
