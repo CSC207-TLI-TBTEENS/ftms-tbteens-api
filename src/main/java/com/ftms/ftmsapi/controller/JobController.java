@@ -1,23 +1,11 @@
 package com.ftms.ftmsapi.controller;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONWrappedObject;
-import com.ftms.ftmsapi.exception.ResourceNotFoundException;
-import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Selection;
 import com.ftms.ftmsapi.model.Timesheet;
@@ -27,8 +15,6 @@ import com.ftms.ftmsapi.repository.TimesheetRepository;
 import com.ftms.ftmsapi.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JsonObjectSerializer;
-import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -61,8 +46,7 @@ public class JobController {
         System.out.println(job);
         ArrayList<User> employees = new ArrayList<>();
         List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(job);
-        List<User> allEmployees = userRepository.findAll();
-        
+
         Job storedjob = jobRepository.findById(job.getId()).orElse(null);
         
         
