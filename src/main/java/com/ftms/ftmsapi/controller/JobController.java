@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -16,7 +17,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONWrappedObject;
 import com.ftms.ftmsapi.exception.ResourceNotFoundException;
-import com.ftms.ftmsapi.model.Company;
+import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Selection;
 import com.ftms.ftmsapi.model.Timesheet;
@@ -28,6 +29,7 @@ import com.ftms.ftmsapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JsonObjectSerializer;
 import org.springframework.boot.json.GsonJsonParser;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -52,31 +55,40 @@ public class JobController {
     @Autowired
     UserRepository userRepository;
  
-    @GetMapping("/employees/jobs")
+    @PostMapping("/jobs/employees")
     public List<User> retrieveEmployeeFromJobs(@Valid @RequestBody Job job) {
+        System.out.println(job.getJobTitle());
+        System.out.println(job);
         ArrayList<User> employees = new ArrayList<>();
         List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(job);
         List<User> allEmployees = userRepository.findAll();
-        if (!jobRepository.findAll().contains(job)) {
+        
+        Job storedjob = jobRepository.findById(job.getId()).orElse(null);
+        
+        
+        if (storedjob == null) {
             System.out.println("Job not found!");
         }
         else {
             for (Timesheet timesheet : timesheetsJob) {
-                for (User emp: allEmployees){
-                    if (emp.getId() == timesheet.getEmployeeId())
-                        employees.add(emp);
-                }
-                
+                User storedUser = userRepository.findById(timesheet.getEmployeeId()).orElse(null);
+                if (storedUser != null)
+                    employees.add(storedUser);
             }
         }
         return employees;
     }
 
+
+
     @GetMapping("/timesheets/jobs")
     public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Job job) {
         ArrayList<Timesheet> timesheetsJob = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
-        if (!jobRepository.findAll().contains(job)) {
+
+        Job storedjob = jobRepository.findById(job.getId()).orElse(null);
+
+        if (storedjob == null) {
             System.out.println("Job not found!");
         }
         else {
@@ -87,10 +99,11 @@ public class JobController {
                 
             }
         }
+        System.out.println(timesheetsJob);
         return timesheetsJob;
     }
 
-    // Create a new company
+    // Create a new Job
     @PostMapping("/jobs")
     public Job createJob(@Valid @RequestBody Job job) {
         return jobRepository.save(job);
@@ -112,15 +125,16 @@ public class JobController {
         return jobRepository.findAll();
     }
     
-
-    // Delete a Job
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteJob (@PathVariable Long id) {
-        Job job = jobRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Job", "id", id));
-
-        jobRepository.delete(job);
-
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/jobs/{id}")
+    public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
+        try {
+            Job job = jobRepository.getOne(id);
+            jobRepository.delete(job);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
+
+  
 }
