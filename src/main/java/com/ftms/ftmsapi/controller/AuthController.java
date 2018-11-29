@@ -41,6 +41,7 @@ public class AuthController {
     public ResponseEntity getUser(@PathVariable Long id) {
         try {
             User user = userRepository.getOne(id);
+            System.out.println("Found user");
             return new ResponseEntity<Object>(user, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity(new ApiResponse(false, "User not found!"),
@@ -78,13 +79,9 @@ public class AuthController {
 
         // Creating user's account
         User user = userRepository.getOne(signUpRequest.getId());
-
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-
         user.setActive(true);
-
         User result = userRepository.save(user);
-
         return new ResponseEntity<Object>(result, HttpStatus.OK);
     }
 }
