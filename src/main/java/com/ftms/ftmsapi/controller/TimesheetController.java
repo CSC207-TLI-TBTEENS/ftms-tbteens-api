@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -19,9 +20,16 @@ public class TimesheetController {
     TimesheetRepository timesheetRepository;
 
     // Create a new employee
-    @PostMapping("")
+    @PostMapping("/save")
     public Timesheet createTimesheet(@Valid @RequestBody Timesheet timesheet) {
         System.out.println("jnadkfbgfbgsdn");
         return timesheetRepository.save(timesheet);
     }
+
+    //Get all the employees
+    @PostMapping("/get")
+    public List<Timesheet> getTimesheet(){
+        return timesheetRepository.findAll();
+    }
+
 }
