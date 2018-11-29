@@ -79,10 +79,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js")
                 .permitAll()
-                .antMatchers("/api/auth/**")
+                .antMatchers("/api/auth/**", "/api/employees")
                     .permitAll()
-//                .antMatchers("/api/companies", "/api/jobs")
-//                    .hasAuthority("ROLE_ADMIN")
                 .anyRequest()
                     .authenticated();
 

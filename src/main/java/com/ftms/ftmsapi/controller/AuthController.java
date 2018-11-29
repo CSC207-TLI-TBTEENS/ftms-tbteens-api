@@ -1,7 +1,6 @@
 package com.ftms.ftmsapi.controller;
 
 import com.ftms.ftmsapi.model.User;
-import com.ftms.ftmsapi.payload.ApiResponse;
 import com.ftms.ftmsapi.payload.JwtAuthenticationResponse;
 import com.ftms.ftmsapi.payload.LoginRequest;
 import com.ftms.ftmsapi.payload.SignUpRequest;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -56,22 +56,22 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
-                    HttpStatus.BAD_REQUEST);
-        }
+//        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
+//            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
+//                    HttpStatus.BAD_REQUEST);
+//        }
+//
+//        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
+//            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
+//                    HttpStatus.BAD_REQUEST);
+//        }
 
         // Creating user's account
-        User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(),
-                signUpRequest.getEmail(), signUpRequest.getNumber(),
-                signUpRequest.getPassword(), signUpRequest.getRole());
+        User user = userRepository.getOne(signUpRequest.getId());
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+
+        user.setActive(true);
 
         User result = userRepository.save(user);
 

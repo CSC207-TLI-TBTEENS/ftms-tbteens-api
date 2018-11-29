@@ -16,6 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -37,10 +38,14 @@ public class UserController {
         return userRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Optional<User> getUser(@PathVariable Long id) {return userRepository.findById(id);}
+
+
     // Create a new employee
     @PostMapping("")
-    public User createEmployee(@Valid @RequestBody User employee) {
-        return userRepository.save(employee);
+    public User createUser(@Valid @RequestBody User user) {
+        return userRepository.save(user);
     }
 
     // Delete an employee

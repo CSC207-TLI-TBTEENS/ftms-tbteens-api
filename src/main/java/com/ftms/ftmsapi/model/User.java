@@ -36,26 +36,22 @@ public class User implements Serializable {
 
     private boolean active;
 
-
-    @NotBlank
     private String password;
 
     @NotBlank
     private String role;
 
     public User () {
-        this.active = true;
+        this.active = false;
     }
 
-    public User(String fname, String lname, String email, String number,
-                String password, String role){
+    public User(String fname, String lname, String email, String number, String role){
         this.firstname = fname;
         this.lastname = lname;
         this.email = email;
-        this.password = password;
         this.number = number;
         this.role = role;
-        this.active = true;
+        this.active = false;
     }
 
     public Long getId() {
