@@ -2,6 +2,7 @@ package com.ftms.ftmsapi.controller;
 import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.payload.ApiResponse;
 import com.ftms.ftmsapi.repository.UserRepository;
+import com.ftms.ftmsapi.services.EmailService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,9 @@ public class EmployeeController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     // Get all employees that are not an administrator
     @GetMapping("")
     public List<User> getAllEmployees() {
@@ -43,6 +47,10 @@ public class EmployeeController {
     // Create a new employee.
     @PostMapping("")
     public User createEmployee(@Valid @RequestBody User user) {
+        emailService.prepareAndSend(user.getEmail(),
+                "Account Activation",
+                "Please visit http://localhost:3000/userregistration " +
+                        "to set up your account");
         return userRepository.save(user);
     }
 

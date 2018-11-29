@@ -37,9 +37,6 @@ public class AuthController {
     @Autowired
     JwtTokenProvider tokenProvider;
 
-    @Autowired
-    private EmailService emailService;
-
     @GetMapping("/user/{id}")
     public ResponseEntity getUser(@PathVariable Long id) {
         try {
@@ -61,9 +58,7 @@ public class AuthController {
                         loginRequest.getPassword()
                 )
         );
-        emailService.prepareAndSend("ihasan67@gmail.com", "This is a test message", "This is a test message!");
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String jwt = tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
