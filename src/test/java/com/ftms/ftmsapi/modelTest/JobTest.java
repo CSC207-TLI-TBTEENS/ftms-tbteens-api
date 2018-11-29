@@ -1,6 +1,19 @@
 package com.ftms.ftmsapi.modelTest;
 
+import com.ftms.ftmsapi.model.Company;
+import com.ftms.ftmsapi.controller.JobController;
+import com.ftms.ftmsapi.model.Job;
+import org.junit.Test;
+
+import javax.persistence.*;
+
+import static org.junit.Assert.assertEquals;
+
+@Entity
+@Table(name="jobs")
 public class JobTest {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
   @Test
   public void testJobTitle(){
@@ -11,6 +24,7 @@ public class JobTest {
 
       assertEquals(job.getJobTitle(),"Weld Part" );
   }
+
   @Test
   public void testJobDescription(){
 
@@ -23,11 +37,13 @@ public class JobTest {
   @Test
   public void testJobCompanyTest(){
 
+      Company company = new Company();
+
       Job job = new Job();
 
-      job.setCompany("Google");
+      job.setCompany(company);
 
-      assertEquals(job.getCompany(),"Google" );
+      assertEquals(job.getCompany(),company );
   }
   @Test
   public void testJobSite(){
