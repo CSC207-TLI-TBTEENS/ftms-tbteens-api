@@ -40,4 +40,12 @@ public class TimesheetController {
         timesheetRepository.save(ts);
     }
 
+    // Reject the timesheet.
+    @PostMapping("/reject")
+    public void reject(Long timesheetId) {
+        Timesheet ts = timesheetRepository.getOne(timesheetId);
+        ts.setApprovalStatus("Rejected");
+        timesheetRepository.save(ts);
+    }
+
 }
