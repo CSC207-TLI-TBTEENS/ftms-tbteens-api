@@ -1,5 +1,6 @@
 package com.ftms.ftmsapi.controller;
 
+import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.payload.ApiResponse;
 import com.ftms.ftmsapi.payload.JwtAuthenticationResponse;
@@ -7,6 +8,8 @@ import com.ftms.ftmsapi.payload.LoginRequest;
 import com.ftms.ftmsapi.payload.SignUpRequest;
 import com.ftms.ftmsapi.repository.UserRepository;
 import com.ftms.ftmsapi.security.JwtTokenProvider;
+
+import org.hashids.Hashids;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +40,17 @@ public class AuthController {
     @Autowired
     JwtTokenProvider tokenProvider;
 
+    Hashids hashids = new Hashids("FTMS");
+
     @GetMapping("/user/{id}")
-    public ResponseEntity getUser(@PathVariable Long id) {
+    public ResponseEntity getUser(@PathVariable String id) {
+        long[] longId = hashids.decode(id);
+        Long newId = new Long(longId[0]);
+        System.out.println(newId);
+
+
         try {
-            User user = userRepository.getOne(id);
+            User user = userRepository.getOne(newId);
             System.out.println("Found user");
             return new ResponseEntity<Object>(user, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
@@ -78,7 +88,12 @@ public class AuthController {
 //        }
 
         // Creating user's account
-        User user = userRepository.getOne(signUpRequest.getId());
+        
+        long[] longId = hashids.decode(signUpRequest.getId());
+        Long id = new Long(longId[0]);
+        System.out.println(id);
+
+        User user = userRepository.getOne(id);
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setActive(true);
         User result = userRepository.save(user);
