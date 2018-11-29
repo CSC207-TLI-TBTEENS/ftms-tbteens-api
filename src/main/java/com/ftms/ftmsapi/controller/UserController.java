@@ -35,7 +35,14 @@ public class UserController {
     // Get all employees
     @GetMapping("")
     public List<User> getAllEmployees() {
-        return userRepository.findAll();
+        ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
+        ArrayList<User> nonAdmin = new ArrayList<>();
+        for (User user: users) {
+            if (!user.getRole().equals("ROLE_ADMIN")) {
+                nonAdmin.add(user);
+            }
+        }
+        return nonAdmin;
     }
 
     @GetMapping("/{id}")
