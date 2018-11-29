@@ -1,6 +1,7 @@
 package com.ftms.ftmsapi.controller;
 
 import com.ftms.ftmsapi.model.User;
+import com.ftms.ftmsapi.payload.ApiResponse;
 import com.ftms.ftmsapi.payload.JwtAuthenticationResponse;
 import com.ftms.ftmsapi.payload.LoginRequest;
 import com.ftms.ftmsapi.payload.SignUpRequest;
@@ -14,11 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -37,6 +36,18 @@ public class AuthController {
 
     @Autowired
     JwtTokenProvider tokenProvider;
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity getUser(@PathVariable Long id) {
+        try {
+            User user = userRepository.getOne(id);
+            System.out.println("Found user");
+            return new ResponseEntity<Object>(user, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(new ApiResponse(false, "User not found!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -68,13 +79,9 @@ public class AuthController {
 
         // Creating user's account
         User user = userRepository.getOne(signUpRequest.getId());
-
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-
         user.setActive(true);
-
         User result = userRepository.save(user);
-
         return new ResponseEntity<Object>(result, HttpStatus.OK);
     }
 }
