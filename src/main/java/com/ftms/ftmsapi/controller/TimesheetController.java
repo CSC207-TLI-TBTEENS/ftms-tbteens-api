@@ -32,4 +32,12 @@ public class TimesheetController {
         return timesheetRepository.findAll();
     }
 
+    // Approve the timesheet.
+    @PostMapping("/approve")
+    public void approve(Long timesheetId) {
+        Timesheet ts = timesheetRepository.getOne(timesheetId);
+        ts.setApprovalStatus("Approved");
+        timesheetRepository.save(ts);
+    }
+
 }
