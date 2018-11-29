@@ -1,5 +1,6 @@
 package com.ftms.ftmsapi.payload;
 
+import javax.persistence.GeneratedValue;
 import javax.validation.constraints.*;
 
 public class SignUpRequest {
