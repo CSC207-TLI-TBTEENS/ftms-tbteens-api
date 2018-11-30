@@ -77,11 +77,11 @@ public class EmployeeController {
             // Try to look for employee by <id>
             User employee = userRepository.getOne(id);
             userRepository.delete(employee);
-            return new ResponseEntity(new ApiResponse(true, employee.getFirstname()
+            return new ResponseEntity<Object>(new ApiResponse(true, employee.getFirstname()
                                     + " " + employee.getLastname() + " deleted!"), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             // If cannot find, return bad request response
-            return new ResponseEntity(new ApiResponse(true, "This employee does not exist!"),
+            return new ResponseEntity<Object>(new ApiResponse(true, "This employee does not exist!"),
                     HttpStatus.BAD_REQUEST);
         }
     }
@@ -112,10 +112,10 @@ public class EmployeeController {
             findUser.setLastname(lastName);
             findUser.setNumber(phone);
             userRepository.save(findUser);
-            return new ResponseEntity(new ApiResponse(true, success), HttpStatus.OK);
+            return new ResponseEntity<Object>(new ApiResponse(true, success), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             // If cannot find, return bad request response
-            return new ResponseEntity(new ApiResponse(true, failure), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(new ApiResponse(true, failure), HttpStatus.BAD_REQUEST);
         }
     }
 
