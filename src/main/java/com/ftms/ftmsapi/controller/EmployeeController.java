@@ -1,20 +1,31 @@
 package com.ftms.ftmsapi.controller;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
+
+import com.ftms.ftmsapi.model.Job;
+import com.ftms.ftmsapi.model.Task;
 import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.payload.ApiResponse;
 import com.ftms.ftmsapi.repository.UserRepository;
+import com.ftms.ftmsapi.services.EmailService;
+
+import org.hashids.Hashids;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import com.ftms.ftmsapi.model.Job;
-import com.ftms.ftmsapi.model.Task;
-import org.springframework.web.bind.annotation.*;
-import javax.persistence.EntityNotFoundException;
-import javax.validation.Valid;
-import javax.xml.ws.Response;
-import java.util.List;
-import java.util.ArrayList;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -22,6 +33,11 @@ import java.util.ArrayList;
 public class EmployeeController {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    Hashids hashids = new Hashids("FTMS", 10);
 
     // Get all employees that are not an administrator
     @GetMapping("")
@@ -43,7 +59,15 @@ public class EmployeeController {
     // Create a new employee.
     @PostMapping("")
     public User createEmployee(@Valid @RequestBody User user) {
-        return userRepository.save(user);
+        // Hashing User id
+        User createdUser = userRepository.save(user);
+        String id = hashids.encode(createdUser.getId());
+
+        emailService.prepareAndSend(createdUser.getEmail(),
+                "Account Activation",
+                "Please visit http://localhost:3000/usersignup/" + id + " " + 
+                        "to set up your account");
+        return userRepository.save(createdUser);
     }
 
     // Delete an employee.

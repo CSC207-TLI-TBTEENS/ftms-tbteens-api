@@ -10,6 +10,7 @@ import com.ftms.ftmsapi.repository.UserRepository;
 import com.ftms.ftmsapi.security.JwtTokenProvider;
 
 import org.hashids.Hashids;
+import com.ftms.ftmsapi.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -40,14 +40,13 @@ public class AuthController {
     @Autowired
     JwtTokenProvider tokenProvider;
 
-    Hashids hashids = new Hashids("FTMS");
+    Hashids hashids = new Hashids("FTMS", 10);
 
     @GetMapping("/user/{id}")
     public ResponseEntity getUser(@PathVariable String id) {
+        // Decoding the user id
         long[] longId = hashids.decode(id);
         Long newId = new Long(longId[0]);
-        System.out.println(newId);
-
 
         try {
             User user = userRepository.getOne(newId);
@@ -68,9 +67,7 @@ public class AuthController {
                         loginRequest.getPassword()
                 )
         );
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String jwt = tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
@@ -88,10 +85,9 @@ public class AuthController {
 //        }
 
         // Creating user's account
-        
+        // Decoding the user id
         long[] longId = hashids.decode(signUpRequest.getId());
         Long id = new Long(longId[0]);
-        System.out.println(id);
 
         User user = userRepository.getOne(id);
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
