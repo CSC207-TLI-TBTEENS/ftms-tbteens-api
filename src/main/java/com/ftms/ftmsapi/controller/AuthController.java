@@ -7,6 +7,7 @@ import com.ftms.ftmsapi.payload.LoginRequest;
 import com.ftms.ftmsapi.payload.SignUpRequest;
 import com.ftms.ftmsapi.repository.UserRepository;
 import com.ftms.ftmsapi.security.JwtTokenProvider;
+import com.ftms.ftmsapi.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -58,9 +58,7 @@ public class AuthController {
                         loginRequest.getPassword()
                 )
         );
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String jwt = tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
