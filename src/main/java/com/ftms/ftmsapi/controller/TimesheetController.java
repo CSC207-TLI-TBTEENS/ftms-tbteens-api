@@ -24,8 +24,6 @@ public class TimesheetController {
     @Autowired
     JobRepository jobRepository;
 
-    // Create a new employee
-
     /**
      * Saving a Timesheet to the database.
      *
@@ -38,6 +36,12 @@ public class TimesheetController {
     }
 
     //Get all the employees
+
+    /**
+     * Get all the timesheets.
+     *
+     * @return All timesheets in the repository.
+     */
     @PostMapping("/get")
     public List<Timesheet> getTimesheet(){
         return timesheetRepository.findAll();
