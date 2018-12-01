@@ -41,12 +41,12 @@ public class JobController {
     UserRepository userRepository;
  
     @GetMapping("/jobs/employees/{id}")
-    public List<User> retrieveEmployeeFromJobs(@PathVariable Long job_id) {
+    public List<User> retrieveEmployeeFromJobs(@PathVariable Long id) {
 
         ArrayList<User> employees = new ArrayList<>();
-        List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(job_id);
+        List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(id);
 
-        Job storedjob = jobRepository.findById(job_id).orElse(null);
+        Job storedjob = jobRepository.findById(id).orElse(null);
         
         
         if (storedjob == null) {
