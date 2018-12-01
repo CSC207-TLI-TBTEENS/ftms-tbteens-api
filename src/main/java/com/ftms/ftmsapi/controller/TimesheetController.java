@@ -34,7 +34,6 @@ public class TimesheetController {
      */
     @PostMapping("/save")
     public Timesheet createTimesheet(@Valid @RequestBody Timesheet timesheet) {
-        System.out.println("jnadkfbgfbgsdn");
         return timesheetRepository.save(timesheet);
     }
 
