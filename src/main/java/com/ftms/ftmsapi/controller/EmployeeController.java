@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/employees")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
 public class EmployeeController {
     @Autowired
     UserRepository userRepository;
@@ -50,6 +50,7 @@ public class EmployeeController {
     Hashids hashids = new Hashids("FTMS", 10);
 
     // Get all employees that are not an administrator
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("")
     public List<User> getAllEmployees() {
         ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
@@ -67,6 +68,7 @@ public class EmployeeController {
     }
 
     // Create a new employee.
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("")
     public User createEmployee(@Valid @RequestBody User user) {
         // Hashing User id
@@ -83,6 +85,7 @@ public class EmployeeController {
     }
 
     // Delete an employee.
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee (@PathVariable Long id) {
         try {
@@ -99,6 +102,7 @@ public class EmployeeController {
     }
 
     // Edit an employee
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("")
     public ResponseEntity<?> editEmployee (@Valid @RequestBody String info) {
         // Parse string into JSON
@@ -135,7 +139,8 @@ public class EmployeeController {
     public List<Job> retrieveJobsFromEmployee(@PathVariable Long id) {
         ArrayList<Job> jobs = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
-        if (userRepository.findById(id).orElse(null).getClass() == User.class) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
             System.out.println("User not found!");
         }
         else {
@@ -146,6 +151,7 @@ public class EmployeeController {
                 }
             }
         }
+
         return jobs;
     }
 }
