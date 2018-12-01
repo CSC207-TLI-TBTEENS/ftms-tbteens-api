@@ -64,6 +64,7 @@ public class EmployeeController {
                 nonAdmin.add(user);
             }
         }
+        System.out.println(nonAdmin);
         return nonAdmin;
     }
 
