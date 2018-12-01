@@ -25,6 +25,13 @@ public class TimesheetController {
     JobRepository jobRepository;
 
     // Create a new employee
+
+    /**
+     * Saving a Timesheet to the database.
+     *
+     * @param timesheet The timesheet we wants to save to the database.
+     * @return The timesheet saved.
+     */
     @PostMapping("/save")
     public Timesheet createTimesheet(@Valid @RequestBody Timesheet timesheet) {
         System.out.println("jnadkfbgfbgsdn");
