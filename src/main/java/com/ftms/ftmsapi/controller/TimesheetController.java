@@ -56,8 +56,6 @@ public class TimesheetController {
         return jobRepository.findJobsFromTimesheetId(timesheet_id);
     }
 
-    //Get timesheet from job and employee id
-
     /**
      * Get all of the timesheets that match the employee with ID employee_id and job with ID job_id.
      *
@@ -70,6 +68,12 @@ public class TimesheetController {
         return timesheetRepository.findTimesheetFromEmployeeIdAndJobId(employee_id, job_id);}
 
     // Approve the timesheet.
+
+    /**
+     * Approves a timesheet.
+     *
+     * @param timesheetId The ID of the timesheet to be approved.
+     */
     @PostMapping("/approve")
     public void approve(Long timesheetId) {
         Timesheet ts = timesheetRepository.getOne(timesheetId);
