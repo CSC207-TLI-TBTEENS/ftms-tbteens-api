@@ -5,13 +5,16 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
-import com.ftms.ftmsapi.model.Job;
-import com.ftms.ftmsapi.model.Task;
+import java.util.Optional;
+import com.ftms.ftmsapi.model.Timesheet;
 import com.ftms.ftmsapi.model.Employee;
+import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.payload.ApiResponse;
+import com.ftms.ftmsapi.repository.JobRepository;
+import com.ftms.ftmsapi.repository.TimesheetRepository;
+import com.ftms.ftmsapi.repository.UserRepository;
 import com.ftms.ftmsapi.services.EmailService;
 
-import com.ftms.ftmsapi.repository.UserRepository;
 import org.hashids.Hashids;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController {
     @Autowired
     UserRepository<Employee> employeeRepository;
+
+    @Autowired
+    TimesheetRepository timesheetRepository;
+
+    @Autowired
+    JobRepository jobRepository;
 
     @Autowired
     private EmailService emailService;
@@ -58,15 +67,20 @@ public class EmployeeController {
 
     // Create a new employee.
     @PostMapping("")
-    public Employee createEmployee(@Valid @RequestBody Employee Employee) {
+    public Employee createEmployee(@Valid @RequestBody Employee employee) {
         // Hashing Employee id
-        Employee createdEmployee = employeeRepository.save(Employee);
+        Employee createdEmployee = employeeRepository.save(employee);
         String id = hashids.encode(createdEmployee.getId());
+        String message = "Hello" + " " + employee.getFirstname() + " " + employee.getLastname() + ", \n\n" +
+                "We’re excited to welcome you to the company. Please follow this link to set your account up: " +
+                "http://localhost:3000/usersignup/" + id +
+                "\n If you encounter any problems, please contact admin." +
+                "\n\n - Nor-Weld";
+
 
         emailService.prepareAndSend(createdEmployee.getEmail(),
                 "Account Activation",
-                "Please visit http://localhost:3000/usersignup/" + id + " " + 
-                        "to set up your account");
+                message);
         return employeeRepository.save(createdEmployee);
     }
 
@@ -78,7 +92,7 @@ public class EmployeeController {
             Employee employee = employeeRepository.getOne(id);
             employeeRepository.delete(employee);
             return new ResponseEntity<Object>(new ApiResponse(true, employee.getFirstname()
-                                    + " " + employee.getLastname() + " deleted!"), HttpStatus.OK);
+                    + " " + employee.getLastname() + " deleted!"), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             // If cannot find, return bad request response
             return new ResponseEntity<Object>(new ApiResponse(true, "This employee does not exist!"),
@@ -119,16 +133,18 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping("/jobs")
-    public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody Employee employee, List<Task> tasks) {
-        ArrayList<Job> jobs = new ArrayList<>();
-        if (!employeeRepository.findAll().contains(employee)) {
-            System.out.println("Employee not found!");
+    @GetMapping("/jobs")
+    public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody Employee user) {
+        ArrayList jobs = new ArrayList<>();
+        List<Timesheet> timesheets = timesheetRepository.findAll();
+        if (!employeeRepository.findAll().contains(user)) {
+            System.out.println("User not found!");
         }
         else {
-            for (Task task : tasks) {
-                if (task.getEmployee().getId().equals(employee.getId())) {
-                    jobs.add(task.getJob());
+            for (Timesheet timesheet : timesheets) {
+                if (timesheet.getEmployeeId().equals(user.getId())) {
+                    Optional<Job> job = jobRepository.findById(timesheet.getJobId());
+                    jobs.add(job);
                 }
             }
         }

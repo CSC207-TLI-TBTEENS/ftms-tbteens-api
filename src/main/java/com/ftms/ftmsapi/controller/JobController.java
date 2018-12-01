@@ -40,7 +40,7 @@ public class JobController {
     @Autowired
     UserRepository<User> userRepository;
  
-    @PostMapping("/jobs/employees")
+    @GetMapping("/jobs/employees")
     public List<User> retrieveEmployeeFromJobs(@Valid @RequestBody Job job) {
         System.out.println(job.getJobTitle());
         System.out.println(job);
