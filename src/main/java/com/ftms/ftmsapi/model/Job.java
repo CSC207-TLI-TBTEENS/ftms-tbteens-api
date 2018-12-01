@@ -20,7 +20,7 @@ public class Job implements Serializable{
     @NotBlank
     private String description;
     private String siteName;
-    
+
     private Company company;
 
     

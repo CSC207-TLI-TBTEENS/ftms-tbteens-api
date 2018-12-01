@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/recovery")
 public class RecoveryController {
     @Autowired
-    UserRepository userRepository;
+    UserRepository<User> userRepository;
 
     // Verify the information given when trying to recover a password
     @PostMapping("/password")

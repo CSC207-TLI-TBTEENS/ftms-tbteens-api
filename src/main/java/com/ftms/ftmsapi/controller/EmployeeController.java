@@ -7,11 +7,11 @@ import javax.validation.Valid;
 
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Task;
-import com.ftms.ftmsapi.model.User;
+import com.ftms.ftmsapi.model.Employee;
 import com.ftms.ftmsapi.payload.ApiResponse;
-import com.ftms.ftmsapi.repository.UserRepository;
 import com.ftms.ftmsapi.services.EmailService;
 
+import com.ftms.ftmsapi.repository.UserRepository;
 import org.hashids.Hashids;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class EmployeeController {
     @Autowired
-    UserRepository userRepository;
+    UserRepository<Employee> employeeRepository;
 
     @Autowired
     private EmailService emailService;
@@ -41,16 +41,16 @@ public class EmployeeController {
 
     // Get all employees that are not an administrator
     @GetMapping("")
-    public List<User> getAllEmployees() {
-        ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
-        ArrayList<User> nonAdmin = new ArrayList<>();
-        // For every user
-        for (User user: users) {
+    public List<Employee> getAllEmployees() {
+        ArrayList<Employee> employees = (ArrayList<Employee>) employeeRepository.findAll();
+        ArrayList<Employee> nonAdmin = new ArrayList<>();
+        // For every Employee
+        for (Employee employee: employees) {
             // if not an admin
-            if (user.getRole().equals("ROLE_EMPLOYEE") ||
-                    user.getRole().equals("ROLE_SUPERVISOR")) {
-                // add to list of users to display
-                nonAdmin.add(user);
+            if (employee.getRole().equals("ROLE_EMPLOYEE") ||
+                    employee.getRole().equals("ROLE_SUPERVISOR")) {
+                // add to list of employees to display
+                nonAdmin.add(employee);
             }
         }
         return nonAdmin;
@@ -58,16 +58,16 @@ public class EmployeeController {
 
     // Create a new employee.
     @PostMapping("")
-    public User createEmployee(@Valid @RequestBody User user) {
-        // Hashing User id
-        User createdUser = userRepository.save(user);
-        String id = hashids.encode(createdUser.getId());
+    public Employee createEmployee(@Valid @RequestBody Employee Employee) {
+        // Hashing Employee id
+        Employee createdEmployee = employeeRepository.save(Employee);
+        String id = hashids.encode(createdEmployee.getId());
 
-        emailService.prepareAndSend(createdUser.getEmail(),
+        emailService.prepareAndSend(createdEmployee.getEmail(),
                 "Account Activation",
                 "Please visit http://localhost:3000/usersignup/" + id + " " + 
                         "to set up your account");
-        return userRepository.save(createdUser);
+        return employeeRepository.save(createdEmployee);
     }
 
     // Delete an employee.
@@ -75,8 +75,8 @@ public class EmployeeController {
     public ResponseEntity<?> deleteEmployee (@PathVariable Long id) {
         try {
             // Try to look for employee by <id>
-            User employee = userRepository.getOne(id);
-            userRepository.delete(employee);
+            Employee employee = employeeRepository.getOne(id);
+            employeeRepository.delete(employee);
             return new ResponseEntity<Object>(new ApiResponse(true, employee.getFirstname()
                                     + " " + employee.getLastname() + " deleted!"), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
@@ -104,14 +104,14 @@ public class EmployeeController {
 
         String failure = "Cannot find EMPLOYEE #" + id.toString();
         try {
-            // Try to find the user by <id>
-            User findUser = userRepository.getOne(id);
+            // Try to find the Employee by <id>
+            Employee findEmployee = employeeRepository.getOne(id);
 
             // Success: set the info to new info
-            findUser.setFirstname(firstName);
-            findUser.setLastname(lastName);
-            findUser.setNumber(phone);
-            userRepository.save(findUser);
+            findEmployee.setFirstname(firstName);
+            findEmployee.setLastname(lastName);
+            findEmployee.setNumber(phone);
+            employeeRepository.save(findEmployee);
             return new ResponseEntity<Object>(new ApiResponse(true, success), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             // If cannot find, return bad request response
@@ -120,14 +120,14 @@ public class EmployeeController {
     }
 
     @PostMapping("/jobs")
-    public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody User user, List<Task> tasks) {
+    public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody Employee employee, List<Task> tasks) {
         ArrayList<Job> jobs = new ArrayList<>();
-        if (!userRepository.findAll().contains(user)) {
-            System.out.println("User not found!");
+        if (!employeeRepository.findAll().contains(employee)) {
+            System.out.println("Employee not found!");
         }
         else {
             for (Task task : tasks) {
-                if (task.getEmployee().getId().equals(user.getId())) {
+                if (task.getEmployee().getId().equals(employee.getId())) {
                     jobs.add(task.getJob());
                 }
             }

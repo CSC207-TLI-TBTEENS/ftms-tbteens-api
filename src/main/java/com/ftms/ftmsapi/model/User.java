@@ -14,6 +14,9 @@ import java.io.Serializable;
                 "email"
         })
 })
+@Inheritance( strategy = InheritanceType.SINGLE_TABLE )
+@DiscriminatorColumn( name = "type" )
+
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements Serializable {
 

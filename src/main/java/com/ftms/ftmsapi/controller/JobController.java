@@ -38,7 +38,7 @@ public class JobController {
     @Autowired
     TimesheetController timesheetController;
     @Autowired
-    UserRepository userRepository;
+    UserRepository<User> userRepository;
  
     @PostMapping("/jobs/employees")
     public List<User> retrieveEmployeeFromJobs(@Valid @RequestBody Job job) {
