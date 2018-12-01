@@ -132,15 +132,15 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees/jobs/{id}")
-    public List<Job> retrieveJobsFromEmployee(@PathVariable Long user_id) {
+    public List<Job> retrieveJobsFromEmployee(@PathVariable Long id) {
         ArrayList jobs = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
-        if (userRepository.findById(user_id).orElse(null).getClass() == User.class) {
+        if (userRepository.findById(id).orElse(null).getClass() == User.class) {
             System.out.println("User not found!");
         }
         else {
             for (Timesheet timesheet : timesheets) {
-                if (timesheet.getEmployeeId().equals(user_id)) {
+                if (timesheet.getEmployeeId().equals(id)) {
                     Optional<Job> job = jobRepository.findById(timesheet.getJobId());
                     jobs.add(job); 
                 }
