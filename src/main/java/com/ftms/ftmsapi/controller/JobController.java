@@ -40,14 +40,13 @@ public class JobController {
     @Autowired
     UserRepository userRepository;
  
-    @PostMapping("/jobs/employees")
-    public List<User> retrieveEmployeeFromJobs(@Valid @RequestBody Job job) {
-        System.out.println(job.getJobTitle());
-        System.out.println(job);
-        ArrayList<User> employees = new ArrayList<>();
-        List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(job);
+    @GetMapping("/jobs/employees/{id}")
+    public List<User> retrieveEmployeeFromJobs(@PathVariable Long id) {
 
-        Job storedjob = jobRepository.findById(job.getId()).orElse(null);
+        ArrayList<User> employees = new ArrayList<>();
+        List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(id);
+
+        Job storedjob = jobRepository.findById(id).orElse(null);
         
         
         if (storedjob == null) {
@@ -66,18 +65,18 @@ public class JobController {
 
 
     @GetMapping("/timesheets/jobs")
-    public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Job job) {
+    public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Long job_id) {
         ArrayList<Timesheet> timesheetsJob = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
 
-        Job storedjob = jobRepository.findById(job.getId()).orElse(null);
+        Job storedjob = jobRepository.findById(job_id).orElse(null);
 
         if (storedjob == null) {
             System.out.println("Job not found!");
         }
         else {
             for (Timesheet timesheet : timesheets) {
-                if (timesheet.getJobId() == job.getId()){
+                if (timesheet.getJobId() == job_id){
                     timesheetsJob.add(timesheet);
                 }
                 

@@ -7,8 +7,12 @@ import javax.validation.Valid;
 
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Task;
+import java.util.Optional;
+import com.ftms.ftmsapi.model.Timesheet;
 import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.payload.ApiResponse;
+import com.ftms.ftmsapi.repository.JobRepository;
+import com.ftms.ftmsapi.repository.TimesheetRepository;
 import com.ftms.ftmsapi.repository.UserRepository;
 import com.ftms.ftmsapi.services.EmailService;
 
@@ -29,10 +33,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/employees")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
 public class EmployeeController {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    TimesheetRepository timesheetRepository;
+
+    @Autowired
+    JobRepository jobRepository;
 
     @Autowired
     private EmailService emailService;
@@ -40,6 +50,7 @@ public class EmployeeController {
     Hashids hashids = new Hashids("FTMS", 10);
 
     // Get all employees that are not an administrator
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("")
     public List<User> getAllEmployees() {
         ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
@@ -58,20 +69,24 @@ public class EmployeeController {
     }
 
     // Create a new employee.
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("")
     public User createEmployee(@Valid @RequestBody User user) {
         // Hashing User id
         User createdUser = userRepository.save(user);
         String id = hashids.encode(createdUser.getId());
+        String message = "Hello" + " " + user.getFirstname() + " " + user.getLastname() + ", \n\n" +
+        "We’re excited to welcome you to the company. Please follow this link to set your account up: " +
+        "http://localhost:3000/usersignup/" + id + 
+        "\n If you encounter any problems, please contact admin." +
+        "\n\n - Nor-Weld";
 
-        emailService.prepareAndSend(createdUser.getEmail(),
-                "Account Activation",
-                "Please visit http://localhost:3000/usersignup/" + id + " " + 
-                        "to set up your account");
+        emailService.prepareAndSend(createdUser.getEmail(), "Account Activation", message);
         return userRepository.save(createdUser);
     }
 
     // Delete an employee.
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee (@PathVariable Long id) {
         try {
@@ -88,6 +103,7 @@ public class EmployeeController {
     }
 
     // Edit an employee
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("")
     public ResponseEntity<?> editEmployee (@Valid @RequestBody String info) {
         // Parse string into JSON
@@ -120,19 +136,23 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping("/jobs")
-    public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody User user, List<Task> tasks) {
+    @GetMapping("/jobs/{id}")
+    public List<Job> retrieveJobsFromEmployee(@PathVariable Long id) {
         ArrayList<Job> jobs = new ArrayList<>();
-        if (!userRepository.findAll().contains(user)) {
+        List<Timesheet> timesheets = timesheetRepository.findAll();
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
             System.out.println("User not found!");
         }
         else {
-            for (Task task : tasks) {
-                if (task.getEmployee().getId().equals(user.getId())) {
-                    jobs.add(task.getJob());
+            for (Timesheet timesheet : timesheets) {
+                if (timesheet.getEmployeeId().equals(id)) {
+                    Job job = jobRepository.findById(timesheet.getJobId()).orElse(null);
+                    jobs.add(job); 
                 }
             }
         }
+
         return jobs;
     }
 }
