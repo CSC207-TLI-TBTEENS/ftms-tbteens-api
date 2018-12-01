@@ -25,7 +25,7 @@ public class TimesheetController {
     JobRepository jobRepository;
 
     /**
-     * Saving a Timesheet to the database.
+     * Saving the Timesheet timesheet to the database.
      *
      * @param timesheet The timesheet we wants to save to the database.
      * @return The timesheet saved.
@@ -46,7 +46,7 @@ public class TimesheetController {
     }
 
     /**
-     * Get all of jobs in the timesheet in a list.
+     * Get all of jobs in the timesheet with id timesheet_id in a list.
      *
      * @param timesheet_id The timesheet ID we want to check the timesheet.
      * @return The list of jobs in the timesheet.
@@ -57,6 +57,14 @@ public class TimesheetController {
     }
 
     //Get timesheet from job and employee id
+
+    /**
+     * Get all of the timesheets
+     *
+     * @param employee_id
+     * @param job_id
+     * @return
+     */
     @RequestMapping("/get/timesheet_by_employee_and_job_id")
     public List<Timesheet> getTimesheetByEmployeeAndJobId(@Valid @RequestBody Long employee_id, Long job_id){
         return timesheetRepository.findTimesheetFromEmployeeIdAndJobId(employee_id, job_id);}
