@@ -67,8 +67,6 @@ public class TimesheetController {
     public List<Timesheet> getTimesheetByEmployeeAndJobId(@Valid @RequestBody Long employee_id, Long job_id){
         return timesheetRepository.findTimesheetFromEmployeeIdAndJobId(employee_id, job_id);}
 
-    // Approve the timesheet.
-
     /**
      * Approves a timesheet.
      *
@@ -81,7 +79,11 @@ public class TimesheetController {
         timesheetRepository.save(ts);
     }
 
-    // Reject the timesheet.
+    /**
+     * Reject a timesheet.
+     *
+     * @param timesheetId The ID of the timesheet to be rejected.
+     */
     @PostMapping("/reject")
     public void reject(Long timesheetId) {
         Timesheet ts = timesheetRepository.getOne(timesheetId);
