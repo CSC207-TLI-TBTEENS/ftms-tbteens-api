@@ -26,7 +26,7 @@ public class TaskController {
     }
 
     @RequestMapping("/tasks/get")
-    public List<Task> getTasksByJobEmployee(@Valid @RequestBody int job_id, int employee_id) {
+    public List<Task> getTasksByJobEmployee(@Valid @RequestBody Long job_id, Long employee_id) {
         return taskRepository.getByJobAndEmployee(job_id, employee_id);
     }
 
