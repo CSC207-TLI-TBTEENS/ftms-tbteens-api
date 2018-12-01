@@ -59,11 +59,11 @@ public class TimesheetController {
     //Get timesheet from job and employee id
 
     /**
-     * Get all of the timesheets
+     * Get all of the timesheets that match the employee with ID employee_id and job with ID job_id.
      *
-     * @param employee_id
-     * @param job_id
-     * @return
+     * @param employee_id The ID of the employee we want to check
+     * @param job_id The ID of the job we want to check
+     * @return The list contains all the timesheets matching the job and the employee.
      */
     @RequestMapping("/get/timesheet_by_employee_and_job_id")
     public List<Timesheet> getTimesheetByEmployeeAndJobId(@Valid @RequestBody Long employee_id, Long job_id){
