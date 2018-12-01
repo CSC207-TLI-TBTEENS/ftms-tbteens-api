@@ -35,19 +35,22 @@ public class TimesheetController {
         return timesheetRepository.save(timesheet);
     }
 
-    //Get all the employees
-
     /**
-     * Get all the timesheets.
+     * Get all the timesheets in a list.
      *
-     * @return All timesheets in the repository.
+     * @return List of all timesheets in the repository.
      */
     @PostMapping("/get")
     public List<Timesheet> getTimesheet(){
         return timesheetRepository.findAll();
     }
 
-    //Get jobs from timesheet id
+    /**
+     * Get all of jobs in the timesheet in a list.
+     *
+     * @param timesheet_id The timesheet ID we want to check the timesheet.
+     * @return The list of jobs in the timesheet.
+     */
     @RequestMapping("/get/job_by_timesheet_id")
     public List<Job> getJobsByTimesheetId(@Valid @RequestBody Long timesheet_id){
         return jobRepository.findJobsFromTimesheetId(timesheet_id);
