@@ -140,7 +140,9 @@ public class EmployeeController {
     public List<Job> retrieveJobsFromEmployee(@PathVariable Long id) {
         ArrayList<Job> jobs = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
+
         User user = userRepository.findById(id).orElse(null);
+        //Check if user is found
         if (user == null) {
             System.out.println("User not found!");
         }
