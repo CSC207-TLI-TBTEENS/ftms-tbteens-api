@@ -131,7 +131,7 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/employees/jobs")
+    @GetMapping("/jobs")
     public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody User user) {
         ArrayList jobs = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
