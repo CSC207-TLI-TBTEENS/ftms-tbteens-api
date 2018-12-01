@@ -7,8 +7,12 @@ import javax.validation.Valid;
 
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Task;
+import java.util.Optional;
+import com.ftms.ftmsapi.model.Timesheet;
 import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.payload.ApiResponse;
+import com.ftms.ftmsapi.repository.JobRepository;
+import com.ftms.ftmsapi.repository.TimesheetRepository;
 import com.ftms.ftmsapi.repository.UserRepository;
 import com.ftms.ftmsapi.services.EmailService;
 
@@ -33,6 +37,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    TimesheetRepository timesheetRepository;
+
+    @Autowired
+    JobRepository jobRepository;
 
     @Autowired
     private EmailService emailService;
@@ -62,11 +72,13 @@ public class EmployeeController {
         // Hashing User id
         User createdUser = userRepository.save(user);
         String id = hashids.encode(createdUser.getId());
+        String message = "Hello" + " " + user.getFirstname() + " " + user.getLastname() + ", \n\n" +
+        "We’re excited to welcome you to the company. Please follow this link to set your account up: " +
+        "http://localhost:3000/usersignup/" + id + 
+        "\n If you encounter any problems, please contact admin." +
+        "\n\n - Nor-Weld";
 
-        emailService.prepareAndSend(createdUser.getEmail(),
-                "Account Activation",
-                "Please visit http://localhost:3000/usersignup/" + id + " " + 
-                        "to set up your account");
+        emailService.prepareAndSend(createdUser.getEmail(), "Account Activation", message);
         return userRepository.save(createdUser);
     }
 
@@ -119,16 +131,18 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping("/jobs")
-    public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody User user, List<Task> tasks) {
-        ArrayList<Job> jobs = new ArrayList<>();
+    @GetMapping("/employees/jobs")
+    public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody User user) {
+        ArrayList jobs = new ArrayList<>();
+        List<Timesheet> timesheets = timesheetRepository.findAll();
         if (!userRepository.findAll().contains(user)) {
             System.out.println("User not found!");
         }
         else {
-            for (Task task : tasks) {
-                if (task.getEmployee().getId().equals(user.getId())) {
-                    jobs.add(task.getJob());
+            for (Timesheet timesheet : timesheets) {
+                if (timesheet.getEmployeeId().equals(user.getId())) {
+                    Optional<Job> job = jobRepository.findById(timesheet.getJobId());
+                    jobs.add(job);
                 }
             }
         }
