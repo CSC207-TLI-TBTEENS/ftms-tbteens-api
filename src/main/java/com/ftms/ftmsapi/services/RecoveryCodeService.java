@@ -24,7 +24,7 @@ public class RecoveryCodeService {
     private EmailService emailService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository<User> userRepository;
 
     RecoveryCodeService() {}
 
