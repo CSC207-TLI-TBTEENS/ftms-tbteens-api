@@ -25,12 +25,18 @@ public class Task implements Serializable{
 
     /**
      * Getter of ID
+     *
      * @return The ID of this.
      */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Getter of employee.
+     *
+     * @return The id.
+     */
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     public User getEmployee() {
