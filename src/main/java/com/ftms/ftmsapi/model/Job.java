@@ -84,6 +84,11 @@ public class Job implements Serializable{
         return company;
     }
 
+    /**
+     * Setter for company.
+     *
+     * @param company The company to be set.
+     */
     public void setCompany(Company company) {
         this.company = company;
     }
