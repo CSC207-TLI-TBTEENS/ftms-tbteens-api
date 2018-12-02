@@ -131,7 +131,13 @@ public class JobController {
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
     }
-    
+
+    /**
+     * Delete the employee with ID id, and then return its response entity.
+     *
+     * @param id The ID of the employee.
+     * @return The response entity from the system.
+     */
     @DeleteMapping("/jobs/{id}")
     public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
         try {
