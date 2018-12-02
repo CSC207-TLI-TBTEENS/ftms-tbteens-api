@@ -59,6 +59,18 @@ public class CompanyController {
         }
     }
 
+    /**
+     * Create a new empty list,
+     * Edit the credentials of the company with ID id
+     * AND RETURN THE SAME EMPTY LIST CREATED AT THE BEGINNING.
+     *
+     * @param id The ID of the company to be changed.
+     * @param name The new name of the company.
+     * @param logo The logo of the company.
+     * @param email The email of the company.
+     * @param phone The phone number of the company.
+     * @return An empty list.
+     */
     @PutMapping("/{id}")
     public List<String> editCompany (@PathVariable Long id, @RequestParam String name,
                                      @RequestParam String logo, @RequestParam String email,
