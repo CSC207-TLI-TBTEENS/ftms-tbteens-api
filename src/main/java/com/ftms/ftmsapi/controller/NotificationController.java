@@ -72,8 +72,6 @@ public class NotificationController {
         return getJobNotification(validationResult, ") has been removed from your queue.", "JOB_DELETE");
     }
 
-    // Process the JSON result, what kind of job action is done (ASSIGN/DELETE), and the type of the notification type
-
     /**
      * Returns the job notification of the validated job validationResult over its userID and the action action of
      * notification type notifType, if the validated job is not an error message. Returns the notification for an
@@ -108,7 +106,12 @@ public class NotificationController {
         return (ResponseEntity) validationResult.get(0);
     }
 
-    // Create a new notification for an employee notifying him/her that a job's timesheet has been reviewed
+    /**
+     * Return a notification stating the status (approved/rejected) of job info after review if info is a valid job,
+     * or an error message elsewise.
+     * @param info The reviewed job to nofity.
+     * @return A notification stating the status of info after review if info is valid, or a error message elsewise.
+     */
     @PostMapping("/jobreviewed")
     public ResponseEntity<?> createNewNotificationJobReviewed(@Valid @RequestBody String info) {
         // Similar to the above function
