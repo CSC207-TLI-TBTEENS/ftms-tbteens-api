@@ -59,8 +59,6 @@ public class NotificationController {
         return getJobNotification(validationResult, ") has been assigned to you.", "JOB_ASSIGN");
     }
 
-    // Create the notification for an employee notifying him/her that a job has been removed from him/her
-
     /**
      * Create the notification for an employee notifying him/her that a job info has been removed from him/her,
      * and return the system response entity.
@@ -134,7 +132,7 @@ public class NotificationController {
      * * jobID
      * * Job Name
      * * Success Message
-     * if the information info has valid userID and jobID. Return an empty list elsewise.
+     * if the information info has valid userID and jobID. Return a list with error message elsewise.
      *
      * @param info The information to be validated.
      * @return A list containing userID, jobID, Job Name and Success Message.
