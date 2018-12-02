@@ -86,6 +86,11 @@ public class User implements Serializable {
         this.firstname = firstname;
     }
 
+    /**
+     * Getter for last name.
+     *
+     * @return The last name.
+     */
     public String getLastname() {
         return lastname;
     }
