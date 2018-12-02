@@ -177,6 +177,11 @@ public class User implements Serializable {
         this.role = role;
     }
 
+    /**
+     * Getter for active.
+     *
+     * @return True if the user is active and false otherwise.
+     */
     public boolean getActive() {
         return active;
     }
