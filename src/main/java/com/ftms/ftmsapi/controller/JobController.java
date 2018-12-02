@@ -106,6 +106,11 @@ public class JobController {
         return jobRepository.save(job);
     }
 
+    /**
+     * Assign a job.
+     *
+     * @param selection The selection to assign.
+     */
     @PutMapping("/jobsassign")
     void assignJob(@Valid @RequestBody Selection selection) {
         Timesheet timesheet = new Timesheet();
