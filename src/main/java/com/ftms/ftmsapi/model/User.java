@@ -159,6 +159,11 @@ public class User implements Serializable {
         this.number = number;
     }
 
+    /**
+     * Getter for role.
+     *
+     * @return The role.
+     */
     public String getRole() {
         return role;
     }
