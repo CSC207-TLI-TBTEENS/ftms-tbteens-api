@@ -95,6 +95,11 @@ public class User implements Serializable {
         return lastname;
     }
 
+    /**
+     * Setter for last name.
+     *
+     * @param lastname The new last name.
+     */
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
