@@ -41,9 +41,9 @@ public class JobController {
     UserRepository userRepository;
 
     /**
-     * Return all the employees involved in the job with the id id in a list.
+     * Return all the employees involved in the job with ID id in a list.
      *
-     * @param id The id of the job.
+     * @param id The ID of the job.
      * @return The list of employees from the job.
      */
     @GetMapping("/jobs/employees/{id}")
@@ -68,8 +68,12 @@ public class JobController {
         return employees;
     }
 
-
-
+    /**
+     * Return all the timesheets related to the job with ID job_id in a list.
+     *
+     * @param job_id The ID of the job we want to check.
+     * @return A list containing all the timesheets related to the job.
+     */
     @GetMapping("/timesheets/jobs")
     public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Long job_id) {
         ArrayList<Timesheet> timesheetsJob = new ArrayList<>();
