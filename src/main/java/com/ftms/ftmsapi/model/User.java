@@ -132,6 +132,11 @@ public class User implements Serializable {
         return password;
     }
 
+    /**
+     * Setter for password.
+     *
+     * @param password The new password.
+     */
     public void setPassword(String password) {
         this.password = password;
     }
