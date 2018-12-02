@@ -186,6 +186,11 @@ public class User implements Serializable {
         return active;
     }
 
+    /**
+     * Setter for active.
+     *
+     * @param active New activity state. True if the user is active and false otherwise.
+     */
     public void setActive(boolean active) {
         this.active = active;
     }
