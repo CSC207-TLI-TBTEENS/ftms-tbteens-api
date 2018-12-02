@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Email;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.NaturalId;
 import java.io.Serializable;
@@ -16,7 +17,6 @@ import java.io.Serializable;
 })
 @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
 @DiscriminatorColumn( name = "user_type" )
-
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements Serializable {
 
@@ -40,6 +40,7 @@ public class User implements Serializable {
 
     private boolean active;
 
+    @JsonIgnore
     private String password;
 
     @NotBlank
