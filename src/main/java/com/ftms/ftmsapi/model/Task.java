@@ -63,6 +63,11 @@ public class Task implements Serializable{
         return job;
     }
 
+    /**
+     * Setter for job.
+     *
+     * @param job The job to be changed.
+     */
     public void setJob(Job job) {
         this.job = job;
     }
