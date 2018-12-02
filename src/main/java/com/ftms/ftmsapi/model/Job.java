@@ -27,6 +27,12 @@ public class Job implements Serializable{
     
 
     // GETTERS/SETTERS
+
+    /**
+     * Getter for job title.
+     *
+     * @return Job title.
+     */
     public String getJobTitle() {
         return this.jobTitle;
     }
