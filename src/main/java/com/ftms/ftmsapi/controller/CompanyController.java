@@ -31,7 +31,12 @@ public class CompanyController {
         return companyRepository.findAll();
     }
 
-    // Create a new company
+    /**
+     * Save a new company to the repository and then return it.
+     *
+     * @param company The company to be saved.
+     * @return
+     */
     @PostMapping("")
     public Company createCompany(@Valid @RequestBody Company company) {
         return companyRepository.save(company);
