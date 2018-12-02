@@ -46,13 +46,11 @@ public class NotificationController {
         return notificationService.findByUserId(id);
     }
 
-    // Create the notification for an employee notifying him/her that a job has been assigned to him/her
-
     /**
-     * Create the nofinication for an employee notifying him/her that a job info has been assigned to him/her, and return
-     * the system response entity.
+     * Create the nofinication for an employee notifying him/her that a job info has been assigned to him/her,
+     * and return the system response entity.
      *
-     * @param info The job assigned.
+     * @param info The job to be assigned.
      * @return The response entity from the system.
      */
     @PostMapping("/jobassigned")
@@ -62,6 +60,14 @@ public class NotificationController {
     }
 
     // Create the notification for an employee notifying him/her that a job has been removed from him/her
+
+    /**
+     * Create the notification for an employee notifying him/her that a job info has been removed from him/her,
+     * and return the system response entity.
+     *
+     * @param info The job to be deleted.
+     * @return The response entity from the system.
+     */
     @PostMapping("/jobdeleted")
     public ResponseEntity<?> createNewNotificationJobDeleted(@Valid @RequestBody String info) {
         ArrayList<Object> validationResult = validateInfo(info);
