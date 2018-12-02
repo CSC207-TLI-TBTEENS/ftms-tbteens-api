@@ -47,6 +47,12 @@ public class AuthController {
 
     Hashids hashids = new Hashids("FTMS", 10);
 
+    /**
+     * Return the message of the employee with ID id if the employee exists, or an error message elsewise.
+     *
+     * @param id The ID of the employee to be checked.
+     * @return The message of the employee if the employee exists, or an error message elsewise.
+     */
     @GetMapping("/user/{id}")
     public ResponseEntity getEmployee(@PathVariable String id) {
         // Decoding the user id
