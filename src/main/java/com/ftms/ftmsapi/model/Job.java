@@ -64,6 +64,11 @@ public class Job implements Serializable{
         return description;
     }
 
+    /**
+     * Setter for description.
+     *
+     * @param description The description to be changed.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
