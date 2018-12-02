@@ -104,6 +104,11 @@ public class User implements Serializable {
         this.lastname = lastname;
     }
 
+    /**
+     * Getter for email.
+     *
+     * @return The email.
+     */
     public String getEmail() {
         return email;
     }
