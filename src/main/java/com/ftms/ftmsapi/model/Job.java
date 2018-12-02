@@ -37,6 +37,11 @@ public class Job implements Serializable{
         return this.jobTitle;
     }
 
+    /**
+     * Setter for job title.
+     *
+     * @param title The title to be changed.
+     */
     public void setJobTitle(String title) {
         this.jobTitle = title;
     }
