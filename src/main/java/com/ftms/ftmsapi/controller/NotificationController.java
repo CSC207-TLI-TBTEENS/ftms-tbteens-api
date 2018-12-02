@@ -29,7 +29,7 @@ public class NotificationController {
     private NotificationService notificationService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository<User> userRepository;
 
     @Autowired
     private JobRepository jobRepository;

@@ -1,6 +1,7 @@
 package com.ftms.ftmsapi.controller;
 import com.ftms.ftmsapi.payload.UserSummary;
 import com.ftms.ftmsapi.repository.UserRepository;
+import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.security.CurrentUser;
 import com.ftms.ftmsapi.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserController {
     @Autowired
-    UserRepository userRepository;
+    UserRepository<User> userRepository;
 
     @GetMapping("/me")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
