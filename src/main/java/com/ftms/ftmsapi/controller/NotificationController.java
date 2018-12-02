@@ -122,6 +122,17 @@ public class NotificationController {
         return (ResponseEntity) validationResult.get(0);
     }
 
+    /**
+     * Returns a list containing
+     * * userID
+     * * jobID
+     * * Job Name
+     * * Success Message
+     * if the information info has valid userID and jobID. Return an empty list elsewise.
+     *
+     * @param info The information to be validated.
+     * @return A list containing userID, jobID, Job Name and Success Message.
+     */
     private ArrayList<Object> validateInfo(String info) {
         ArrayList<Object> result = new ArrayList<>();
 
