@@ -55,6 +55,11 @@ public class Job implements Serializable{
         return id;
     }
 
+    /**
+     * Getter for description.
+     *
+     * @return The description.
+     */
     public String getDescription() {
         return description;
     }
