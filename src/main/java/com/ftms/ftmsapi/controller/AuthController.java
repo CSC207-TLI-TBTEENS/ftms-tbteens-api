@@ -88,10 +88,10 @@ public class AuthController {
     }
 
     /**
-     * Process a sign-up request signUpRequest and return the result.
+     * Process a sign-up request signUpRequest and return the response entity of the new employee.
      *
      * @param signUpRequest The sign-up request.
-     * @return The result of sign-up.
+     * @return The response entity of the signed-up employee.
      */
     @PostMapping("/signup")
     public ResponseEntity registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
