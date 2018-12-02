@@ -28,13 +28,22 @@ public class CompanyController {
 
     Hashids hashids = new Hashids("FTMS", 10);
 
-    // Get all companies
+    /**
+     * Get all companies in a list.
+     *
+     * @return A list containing all companies.
+     */
     @GetMapping("")
     public List<Company> getAllCompanies() {
         return companyRepository.findAll();
     }
 
-    // Create a new company
+    /**
+     * Save company to the repository and then return it.
+     *
+     * @param company The company to be saved.
+     * @return
+     */
     @PostMapping("")
     public Company createCompany(@Valid @RequestBody Company company) {
         // Hashing ClientUser id
@@ -51,7 +60,12 @@ public class CompanyController {
         return createdCompany;
     }
 
-    // Delete a company
+    /**
+     * Delete the company with ID id, and then return the response entity.
+     *
+     * @param id The ID of the company to be deleted.
+     * @return The response entity from the system.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
         try {
@@ -63,6 +77,18 @@ public class CompanyController {
         }
     }
 
+    /**
+     * Create a new empty list,
+     * Edit the credentials of the company with ID id
+     * AND RETURN THE SAME EMPTY LIST CREATED AT THE BEGINNING.
+     *
+     * @param id The ID of the company to be changed.
+     * @param name The new name of the company.
+     * @param logo The logo of the company.
+     * @param email The email of the company.
+     * @param phone The phone number of the company.
+     * @return An empty list.
+     */
     @PutMapping("/{id}")
     public List<String> editCompany (@PathVariable Long id, @RequestParam String name,
                                      @RequestParam String logo, @RequestParam String email,
