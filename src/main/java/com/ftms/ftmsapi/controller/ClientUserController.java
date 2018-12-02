@@ -42,7 +42,12 @@ public class ClientUserController {
 
     Hashids hashids = new Hashids("FTMS", 10);
 
-    // Get all client users of company
+    /**
+     * Return all client users of the company with ID companyId in a list.
+     *
+     * @param companyId The ID of the company to be checked.
+     * @return The list containing all the client users of the company.
+     */
     @GetMapping("/{companyId}")
     public List<ClientUser> getAllclientUsersOfCompany(@PathVariable Long companyId) {
         ArrayList<ClientUser> users = (ArrayList<ClientUser>) clientUserRepository.findAll();
@@ -58,7 +63,12 @@ public class ClientUserController {
         return nonAdmin;
     }
 
-    // Create a new clientUser.
+    /**
+     * Save a new client user to the repository and request him/her to activate his/her account.
+     *
+     * @param user The client user to be saved.
+     * @return The saved client user.
+     */
     @PostMapping("")
     public ClientUser createClientUser(@Valid @RequestBody ClientUser user) {
         // Hashing ClientUser id
@@ -72,7 +82,12 @@ public class ClientUserController {
         return clientUserRepository.save(createdUser);
     }
 
-    // Delete an client user.
+    /**
+     * Delete the client user with ID id if the client user exists, and return the system response entity.
+     *
+     * @param id The ID of the client user to be deleted.
+     * @return The system response entity.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteClientUser (@PathVariable Long id) {
         try {
@@ -88,7 +103,13 @@ public class ClientUserController {
         }
     }
 
-    // Edit an clientUser
+    /**
+     * Parsing the information info of a client user, using the id information to find him/her, and edit other
+     * credentials.
+     *
+     * @param info The information of the client user to be editted.
+     * @return The system response entity.
+     */
     @PutMapping("")
     public ResponseEntity<?> editclientUser (@Valid @RequestBody String info) {
         // Parse string into JSON
