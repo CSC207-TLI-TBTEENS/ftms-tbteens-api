@@ -60,7 +60,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Getter of ID.
+     * Getter for ID.
      *
      * @return The id.
      */
@@ -68,6 +68,11 @@ public class User implements Serializable {
         return id;
     }
 
+    /**
+     * Getter for first name.
+     *
+     * @return The first name.
+     */
     public String getFirstname() {
         return firstname;
     }
