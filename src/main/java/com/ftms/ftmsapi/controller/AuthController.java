@@ -67,6 +67,12 @@ public class AuthController {
         }
     }
 
+    /**
+     * Authenticates a login request loginRequest and return the result.
+     *
+     * @param loginRequest The login request.
+     * @return The result of authentication.
+     */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
