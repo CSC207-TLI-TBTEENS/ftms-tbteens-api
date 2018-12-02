@@ -39,7 +39,13 @@ public class JobController {
     TimesheetController timesheetController;
     @Autowired
     UserRepository userRepository;
- 
+
+    /**
+     * Return all the employees involved in the job with the id id in a list.
+     *
+     * @param id The id of the job.
+     * @return The list of employees from the job.
+     */
     @GetMapping("/jobs/employees/{id}")
     public List<User> retrieveEmployeeFromJobs(@PathVariable Long id) {
 
