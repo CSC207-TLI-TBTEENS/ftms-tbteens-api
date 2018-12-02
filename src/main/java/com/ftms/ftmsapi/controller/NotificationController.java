@@ -6,12 +6,14 @@ import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.payload.ApiResponse;
 import com.ftms.ftmsapi.payload.NotificationService;
 import com.ftms.ftmsapi.repository.JobRepository;
+import com.ftms.ftmsapi.repository.NotificationRepository;
 import com.ftms.ftmsapi.repository.UserRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +22,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/notifications")
 public class NotificationController {
     @Autowired
@@ -32,11 +34,10 @@ public class NotificationController {
     @Autowired
     private JobRepository jobRepository;
 
-    NotificationController() {}
-
     // Get all the notifications for a certain employee with an ID
     @GetMapping("/{id}")
     public List<Notification> getNotificationByUserId(@PathVariable Long id) {
+        System.out.println("Hello");
         return notificationService.findByUserId(id);
     }
 
