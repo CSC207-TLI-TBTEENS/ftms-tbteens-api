@@ -32,7 +32,7 @@ public class CompanyController {
     }
 
     /**
-     * Save a new company to the repository and then return it.
+     * Save company to the repository and then return it.
      *
      * @param company The company to be saved.
      * @return
@@ -42,7 +42,12 @@ public class CompanyController {
         return companyRepository.save(company);
     }
 
-    // Delete a company
+    /**
+     * Delete the company with ID id, and then return the response entity.
+     *
+     * @param id The ID of the company to be deleted.
+     * @return The response entity from the system.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
         try {
