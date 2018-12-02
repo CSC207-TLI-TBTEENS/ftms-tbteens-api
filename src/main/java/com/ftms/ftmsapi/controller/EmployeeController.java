@@ -5,10 +5,9 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
-import java.util.Optional;
+import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Timesheet;
 import com.ftms.ftmsapi.model.Employee;
-import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.payload.ApiResponse;
 import com.ftms.ftmsapi.repository.JobRepository;
 import com.ftms.ftmsapi.repository.TimesheetRepository;
@@ -32,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/employees")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
 public class EmployeeController {
     @Autowired
     UserRepository<Employee> employeeRepository;
@@ -49,6 +48,7 @@ public class EmployeeController {
     Hashids hashids = new Hashids("FTMS", 10);
 
     // Get all employees that are not an administrator
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("")
     public List<Employee> getAllEmployees() {
         ArrayList<Employee> employees = (ArrayList<Employee>) employeeRepository.findAll();
@@ -62,10 +62,12 @@ public class EmployeeController {
                 nonAdmin.add(employee);
             }
         }
+        System.out.println(nonAdmin);
         return nonAdmin;
     }
 
     // Create a new employee.
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("")
     public Employee createEmployee(@Valid @RequestBody Employee employee) {
         // Hashing Employee id
@@ -85,6 +87,7 @@ public class EmployeeController {
     }
 
     // Delete an employee.
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee (@PathVariable Long id) {
         try {
@@ -92,7 +95,7 @@ public class EmployeeController {
             Employee employee = employeeRepository.getOne(id);
             employeeRepository.delete(employee);
             return new ResponseEntity<Object>(new ApiResponse(true, employee.getFirstname()
-                    + " " + employee.getLastname() + " deleted!"), HttpStatus.OK);
+                                    + " " + employee.getLastname() + " deleted!"), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             // If cannot find, return bad request response
             return new ResponseEntity<Object>(new ApiResponse(true, "This employee does not exist!"),
@@ -101,6 +104,7 @@ public class EmployeeController {
     }
 
     // Edit an employee
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("")
     public ResponseEntity<?> editEmployee (@Valid @RequestBody String info) {
         // Parse string into JSON
@@ -133,21 +137,25 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/jobs")
-    public List<Job> retrieveJobsFromEmployee(@Valid @RequestBody Employee user) {
-        ArrayList jobs = new ArrayList<>();
+    @GetMapping("/jobs/{id}")
+    public List<Job> retrieveJobsFromEmployee(@PathVariable Long id) {
+        ArrayList<Job> jobs = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
-        if (!employeeRepository.findAll().contains(user)) {
+
+        Employee user = employeeRepository.findById(id).orElse(null);
+        //Check if user is found
+        if (user == null) {
             System.out.println("User not found!");
         }
         else {
             for (Timesheet timesheet : timesheets) {
-                if (timesheet.getEmployeeId().equals(user.getId())) {
-                    Optional<Job> job = jobRepository.findById(timesheet.getJobId());
+                if (timesheet.getEmployeeId().equals(id)) {
+                    Job job = jobRepository.findById(timesheet.getJobId()).orElse(null);
                     jobs.add(job);
                 }
             }
         }
+
         return jobs;
     }
 }

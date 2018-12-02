@@ -47,7 +47,7 @@ public class Job implements Serializable{
     }
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @JoinColumn(name = "company_id")
     public Company getCompany() {
         return company;
     }
