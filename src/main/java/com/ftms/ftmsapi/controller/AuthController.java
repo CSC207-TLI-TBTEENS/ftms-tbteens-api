@@ -87,6 +87,12 @@ public class AuthController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 
+    /**
+     * Process a sign-up request signUpRequest and return the result.
+     *
+     * @param signUpRequest The sign-up request.
+     * @return The result of sign-up.
+     */
     @PostMapping("/signup")
     public ResponseEntity registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         // Creating user's account
