@@ -39,7 +39,13 @@ public class JobController {
     TimesheetController timesheetController;
     @Autowired
     UserRepository<User> userRepository;
- 
+
+    /**
+     * Return all the employees involved in the job with ID id in a list.
+     *
+     * @param id The ID of the job.
+     * @return The list of employees from the job.
+     */
     @GetMapping("/jobs/employees/{id}")
     public List<User> retrieveEmployeeFromJobs(@PathVariable Long id) {
 
@@ -62,6 +68,13 @@ public class JobController {
         return employees;
     }
 
+
+    /**
+     * Return all the timesheets related to the job with ID job_id in a list.
+     *
+     * @param job_id The ID of the job we want to check.
+     * @return A list containing all the timesheets related to the job.
+     */
     @GetMapping("/timesheets/jobs")
     public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Long job_id) {
         ArrayList<Timesheet> timesheetsJob = new ArrayList<>();
@@ -84,12 +97,21 @@ public class JobController {
         return timesheetsJob;
     }
 
-    // Create a new Job
+    /**
+     * Saves the job job to the repository.
+     * @param job The job to be saved.
+     * @return The job saved.
+     */
     @PostMapping("/jobs")
     public Job createJob(@Valid @RequestBody Job job) {
         return jobRepository.save(job);
     }
 
+    /**
+     * Assign a job.
+     *
+     * @param selection The selection to assign.
+     */
     @PutMapping("/jobsassign")
     void assignJob(@Valid @RequestBody Selection selection) {
         Timesheet timesheet = new Timesheet();
@@ -101,12 +123,22 @@ public class JobController {
 
     }
 
-    // Get all Jobs
+    /**
+     * Return a list containing all jobs.
+     *
+     * @return A list containing all jobs.
+     */
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
     }
-    
+
+    /**
+     * Delete the employee with ID id, and then return its response entity.
+     *
+     * @param id The ID of the employee.
+     * @return The response entity from the system.
+     */
     @DeleteMapping("/jobs/{id}")
     public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
         try {
