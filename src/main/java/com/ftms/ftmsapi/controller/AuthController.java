@@ -1,16 +1,15 @@
 package com.ftms.ftmsapi.controller;
 
-import com.ftms.ftmsapi.model.Job;
-import com.ftms.ftmsapi.model.User;
-import com.ftms.ftmsapi.payload.ApiResponse;
-import com.ftms.ftmsapi.payload.JwtAuthenticationResponse;
-import com.ftms.ftmsapi.payload.LoginRequest;
-import com.ftms.ftmsapi.payload.SignUpRequest;
-import com.ftms.ftmsapi.repository.UserRepository;
+import com.ftms.ftmsapi.model.ClientUser;
+import com.ftms.ftmsapi.model.Company;
+import com.ftms.ftmsapi.model.Employee;
+import com.ftms.ftmsapi.payload.*;
+import com.ftms.ftmsapi.repository.ClientUserRepository;
+import com.ftms.ftmsapi.repository.CompanyRepository;
+import com.ftms.ftmsapi.repository.EmployeeRepository;
 import com.ftms.ftmsapi.security.JwtTokenProvider;
 
 import org.hashids.Hashids;
-import com.ftms.ftmsapi.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,13 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository<User> userRepository;
+    EmployeeRepository employeeRepository;
+
+    @Autowired
+    ClientUserRepository clientUserRepository;
+
+    @Autowired
+    CompanyRepository companyRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -43,15 +48,13 @@ public class AuthController {
     Hashids hashids = new Hashids("FTMS", 10);
 
     @GetMapping("/user/{id}")
-    public ResponseEntity getUser(@PathVariable String id) {
+    public ResponseEntity getEmployee(@PathVariable String id) {
         // Decoding the user id
         long[] longId = hashids.decode(id);
-        Long newId = new Long(longId[0]);
-
+        Long newId = longId[0];
         try {
-            User user = userRepository.getOne(newId);
-            System.out.println("Found user");
-            return new ResponseEntity<Object>(user, HttpStatus.OK);
+            Employee employee = employeeRepository.getOne(newId);
+            return new ResponseEntity<Object>(employee, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity(new ApiResponse(false, "User not found!"),
                     HttpStatus.BAD_REQUEST);
@@ -74,25 +77,29 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-//        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-//            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-//                    HttpStatus.BAD_REQUEST);
-//        }
-//
-//        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-//            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
-//                    HttpStatus.BAD_REQUEST);
-//        }
-
         // Creating user's account
         // Decoding the user id
         long[] longId = hashids.decode(signUpRequest.getId());
-        Long id = new Long(longId[0]);
+        Long id = longId[0];
 
-        User user = userRepository.getOne(id);
+        Employee employee = employeeRepository.getOne(id);
+        employee.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        employee.setActive(true);
+        Employee result = employeeRepository.save(employee);
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/companysignup")
+    public ResponseEntity registerCompany(@Valid @RequestBody CompanySignUpRequest signUpRequest) {
+        long[] longId = hashids.decode(signUpRequest.getId());
+        Long id = longId[0];
+        Company company = companyRepository.getOne(id);
+        ClientUser user = new ClientUser(signUpRequest.getFirstname(),
+                signUpRequest.getLastname(), signUpRequest.getEmail(),
+                signUpRequest.getNumber(), "ROLE_CLIENT", company);
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setActive(true);
-        User result = userRepository.save(user);
+        ClientUser result = clientUserRepository.save(user);
         return new ResponseEntity<Object>(result, HttpStatus.OK);
     }
 }

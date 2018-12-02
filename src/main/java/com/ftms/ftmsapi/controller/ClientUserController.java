@@ -7,10 +7,10 @@ import javax.validation.Valid;
 
 import com.ftms.ftmsapi.model.ClientUser;
 import com.ftms.ftmsapi.payload.ApiResponse;
+import com.ftms.ftmsapi.repository.ClientUserRepository;
 import com.ftms.ftmsapi.services.EmailService;
 
 import com.ftms.ftmsapi.model.Company;
-import com.ftms.ftmsapi.repository.UserRepository;
 import com.ftms.ftmsapi.repository.CompanyRepository;
 import org.hashids.Hashids;
 import org.json.JSONObject;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class ClientUserController {
     @Autowired
-    UserRepository<ClientUser> clientUserRepository;
+    ClientUserRepository clientUserRepository;
 
     @Autowired
     CompanyRepository companyRepository;
@@ -60,7 +60,7 @@ public class ClientUserController {
 
     // Create a new clientUser.
     @PostMapping("")
-    public ClientUser createclientUser(@Valid @RequestBody ClientUser user) {
+    public ClientUser createClientUser(@Valid @RequestBody ClientUser user) {
         // Hashing ClientUser id
         ClientUser createdUser = clientUserRepository.save(user);
         String id = hashids.encode(createdUser.getId());
@@ -74,7 +74,7 @@ public class ClientUserController {
 
     // Delete an client user.
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteclientUser (@PathVariable Long id) {
+    public ResponseEntity<?> deleteClientUser (@PathVariable Long id) {
         try {
             // Try to look for client user by <id>
             ClientUser clientUser = clientUserRepository.getOne(id);

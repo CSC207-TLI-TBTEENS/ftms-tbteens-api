@@ -8,7 +8,9 @@ import javax.validation.Valid;
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.model.Timesheet;
 import com.ftms.ftmsapi.model.Employee;
+import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.payload.ApiResponse;
+import com.ftms.ftmsapi.repository.EmployeeRepository;
 import com.ftms.ftmsapi.repository.JobRepository;
 import com.ftms.ftmsapi.repository.TimesheetRepository;
 import com.ftms.ftmsapi.repository.UserRepository;
@@ -34,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class EmployeeController {
     @Autowired
-    UserRepository<Employee> employeeRepository;
+    EmployeeRepository employeeRepository;
 
     @Autowired
     TimesheetRepository timesheetRepository;
@@ -78,8 +80,6 @@ public class EmployeeController {
                 "http://localhost:3000/usersignup/" + id +
                 "\n If you encounter any problems, please contact admin." +
                 "\n\n - Nor-Weld";
-
-
         emailService.prepareAndSend(createdEmployee.getEmail(),
                 "Account Activation",
                 message);
@@ -93,7 +93,7 @@ public class EmployeeController {
         try {
             // Try to look for employee by <id>
             Employee employee = employeeRepository.getOne(id);
-            employeeRepository.delete(employee);
+            employeeRepository.deleteById(employee.getId());
             return new ResponseEntity<Object>(new ApiResponse(true, employee.getFirstname()
                                     + " " + employee.getLastname() + " deleted!"), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
