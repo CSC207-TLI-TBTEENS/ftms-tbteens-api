@@ -150,6 +150,11 @@ public class User implements Serializable {
         return number;
     }
 
+    /**
+     * Setter for number.
+     *
+     * @param number The new number.
+     */
     public void setNumber(String number) {
         this.number = number;
     }
