@@ -122,7 +122,11 @@ public class JobController {
 
     }
 
-    // Get all Jobs
+    /**
+     * Return a list containing all jobs.
+     *
+     * @return A list containing all jobs.
+     */
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
