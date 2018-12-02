@@ -72,6 +72,11 @@ public class Task implements Serializable{
         this.job = job;
     }
 
+    /**
+     * The getter for description.
+     *
+     * @return The description.
+     */
     public String getDescription() {
         return description;
     }
