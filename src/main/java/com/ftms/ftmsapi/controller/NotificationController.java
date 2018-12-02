@@ -73,6 +73,18 @@ public class NotificationController {
     }
 
     // Process the JSON result, what kind of job action is done (ASSIGN/DELETE), and the type of the notification type
+
+    /**
+     * Returns the job notification of the validated job validationResult over its userID and the action action of
+     * notification type notifType, if the validated job is not an error message. Returns the notification for an
+     * error elsewise.
+     *
+     * @param validationResult The validated job.
+     * @param action The action of notification.
+     * @param notifType The notification type.
+     * @return The job notification if the validationResult is an validated job, or an error message elsewise.
+     * @throws JSONException
+     */
     private ResponseEntity<?> getJobNotification(ArrayList<Object> validationResult, String action, String notifType)
             throws JSONException {
         // Look at the function for validationResult for what this is
