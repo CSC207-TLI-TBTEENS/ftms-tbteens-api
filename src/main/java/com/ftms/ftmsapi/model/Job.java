@@ -73,6 +73,11 @@ public class Job implements Serializable{
         this.description = description;
     }
 
+    /**
+     * Getter for company.
+     *
+     * @return The company.
+     */
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     public Company getCompany() {
