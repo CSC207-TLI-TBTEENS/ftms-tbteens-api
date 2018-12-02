@@ -46,6 +46,11 @@ public class Job implements Serializable{
         this.jobTitle = title;
     }
 
+    /**
+     * Getter for id
+     *
+     * @return The id.
+     */
     public Long getId() {
         return id;
     }
