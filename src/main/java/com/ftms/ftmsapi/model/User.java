@@ -77,6 +77,11 @@ public class User implements Serializable {
         return firstname;
     }
 
+    /**
+     * Setter for first name.
+     *
+     * @param firstname The new first name.
+     */
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
