@@ -102,6 +102,11 @@ public class Job implements Serializable{
         return siteName;
     }
 
+    /**
+     * Setter for site name.
+     *
+     * @param siteName The site name to be changed.
+     */
     public void setSiteName(String siteName) {
         this.siteName = siteName;
     }
