@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.NaturalId;
+
 import java.io.Serializable;
 
 @Entity
@@ -15,8 +16,8 @@ import java.io.Serializable;
                 "email"
         })
 })
-@Inheritance( strategy = InheritanceType.SINGLE_TABLE )
-@DiscriminatorColumn( name = "user_type" )
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements Serializable {
 
@@ -46,11 +47,11 @@ public class User implements Serializable {
     @NotBlank
     private String role;
 
-    public User () {
+    public User() {
         this.active = false;
     }
 
-    public User(String fname, String lname, String email, String number, String role){
+    public User(String fname, String lname, String email, String number, String role) {
         this.firstname = fname;
         this.lastname = lname;
         this.email = email;
@@ -122,9 +123,18 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getPassword() { return password; }
+    /**
+     * Getter for password.
+     *
+     * @return The password.
+     */
+    public String getPassword() {
+        return password;
+    }
 
-    public void setPassword(String password) { this.password = password; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getNumber() {
         return number;
@@ -134,15 +144,19 @@ public class User implements Serializable {
         this.number = number;
     }
 
-    public String getRole() { return role; }
+    public String getRole() {
+        return role;
+    }
 
-    public void setRole(String role) { this.role = role; }
+    public void setRole(String role) {
+        this.role = role;
+    }
 
-    public boolean getActive(){
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active){
+    public void setActive(boolean active) {
         this.active = active;
     }
 
