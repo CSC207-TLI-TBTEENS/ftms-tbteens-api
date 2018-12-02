@@ -93,6 +93,11 @@ public class Job implements Serializable{
         this.company = company;
     }
 
+    /**
+     * Getter for site name.
+     *
+     * @return The site name.
+     */
     public String getSiteName() {
         return siteName;
     }
