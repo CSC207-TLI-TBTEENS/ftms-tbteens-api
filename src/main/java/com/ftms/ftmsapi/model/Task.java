@@ -21,11 +21,15 @@ public class Task implements Serializable{
 
     private String description;
 
+    // GETTERS/SETTERS
+
+    /**
+     * Getter of ID
+     * @return The ID of this.
+     */
     public Long getId() {
         return id;
     }
-
-    // GETTERS/SETTERS
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
