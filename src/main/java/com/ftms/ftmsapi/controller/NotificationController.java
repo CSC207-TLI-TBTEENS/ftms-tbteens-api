@@ -34,7 +34,12 @@ public class NotificationController {
     @Autowired
     private JobRepository jobRepository;
 
-    // Get all the notifications for a certain employee with an ID
+    /**
+     * Return all the notifications for a certain employee with ID id in a list
+     *
+     * @param id The ID of the employee to be checked.
+     * @return A list containing all notifications for this employee.
+     */
     @GetMapping("/{id}")
     public List<Notification> getNotificationByUserId(@PathVariable Long id) {
         System.out.println("Hello");
