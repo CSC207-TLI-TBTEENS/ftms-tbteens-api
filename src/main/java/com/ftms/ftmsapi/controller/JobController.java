@@ -38,7 +38,7 @@ public class JobController {
     @Autowired
     TimesheetController timesheetController;
     @Autowired
-    UserRepository userRepository;
+    UserRepository<User> userRepository;
 
     /**
      * Return all the employees involved in the job with ID id in a list.
