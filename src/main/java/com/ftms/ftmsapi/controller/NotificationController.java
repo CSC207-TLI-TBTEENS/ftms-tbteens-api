@@ -49,10 +49,10 @@ public class NotificationController {
     // Create the notification for an employee notifying him/her that a job has been assigned to him/her
 
     /**
-     * Create the nofinication for an employee notifying him/her that a job has been assigned to him/her, and return
+     * Create the nofinication for an employee notifying him/her that a job info has been assigned to him/her, and return
      * the system response entity.
      *
-     * @param info
+     * @param info The job assigned.
      * @return The response entity from the system.
      */
     @PostMapping("/jobassigned")
