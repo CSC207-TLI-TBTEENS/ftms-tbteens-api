@@ -168,6 +168,11 @@ public class User implements Serializable {
         return role;
     }
 
+    /**
+     * Setter for role.
+     *
+     * @param role The new role.
+     */
     public void setRole(String role) {
         this.role = role;
     }
