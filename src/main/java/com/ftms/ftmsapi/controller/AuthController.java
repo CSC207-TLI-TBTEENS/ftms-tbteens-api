@@ -48,10 +48,10 @@ public class AuthController {
     Hashids hashids = new Hashids("FTMS", 10);
 
     /**
-     * Return the message of the employee with ID id if the employee exists, or an error message elsewise.
+     * Return the response entity of the employee with ID id if the employee exists, or an error message elsewise.
      *
      * @param id The ID of the employee to be checked.
-     * @return The message of the employee if the employee exists, or an error message elsewise.
+     * @return The response entity of the employee if the employee exists, or an error message elsewise.
      */
     @GetMapping("/user/{id}")
     public ResponseEntity getEmployee(@PathVariable String id) {
@@ -71,7 +71,7 @@ public class AuthController {
      * Authenticates a login request loginRequest and return the result.
      *
      * @param loginRequest The login request.
-     * @return The result of authentication.
+     * @return The response entity of authentication.
      */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
