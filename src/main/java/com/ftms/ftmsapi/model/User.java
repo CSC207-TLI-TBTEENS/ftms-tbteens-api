@@ -59,6 +59,11 @@ public class User implements Serializable {
         this.active = false;
     }
 
+    /**
+     * Getter of ID.
+     *
+     * @return The id.
+     */
     public Long getId() {
         return id;
     }
