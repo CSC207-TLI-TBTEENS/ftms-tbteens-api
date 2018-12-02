@@ -107,6 +107,13 @@ public class AuthController {
         return new ResponseEntity<Object>(result, HttpStatus.OK);
     }
 
+    /**
+     * Process a sign-up request CompanySignUpRequest from a company and
+     * return the response entity fo the new employee.
+     *
+     * @param signUpRequest The sing-up request.
+     * @return The response entity of the signed-up company.
+     */
     @PostMapping("/companysignup")
     public ResponseEntity registerCompany(@Valid @RequestBody CompanySignUpRequest signUpRequest) {
         long[] longId = hashids.decode(signUpRequest.getId());
