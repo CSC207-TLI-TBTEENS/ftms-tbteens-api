@@ -113,6 +113,11 @@ public class User implements Serializable {
         return email;
     }
 
+    /**
+     * Setter for email.
+     *
+     * @param email The new email.
+     */
     public void setEmail(String email) {
         this.email = email;
     }
