@@ -20,8 +20,7 @@ public class Job implements Serializable{
     @NotBlank
     private String description;
     private String siteName;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
+
     private Company company;
 
     
@@ -48,7 +47,7 @@ public class Job implements Serializable{
     }
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @JoinColumn(name = "company_id")
     public Company getCompany() {
         return company;
     }

@@ -38,7 +38,7 @@ public class JobController {
     @Autowired
     TimesheetController timesheetController;
     @Autowired
-    UserRepository userRepository;
+    UserRepository<User> userRepository;
  
     @GetMapping("/jobs/employees/{id}")
     public List<User> retrieveEmployeeFromJobs(@PathVariable Long id) {

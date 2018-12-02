@@ -20,7 +20,7 @@ import java.util.HashMap;
 @RequestMapping("/api/recovery")
 public class RecoveryController {
     @Autowired
-    UserRepository userRepository;
+    UserRepository<User> userRepository;
 
     @Autowired
     RecoveryCodeService recoveryCodeService;

@@ -6,11 +6,11 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import com.ftms.ftmsapi.model.Job;
-import com.ftms.ftmsapi.model.Task;
-import java.util.Optional;
 import com.ftms.ftmsapi.model.Timesheet;
+import com.ftms.ftmsapi.model.Employee;
 import com.ftms.ftmsapi.model.User;
 import com.ftms.ftmsapi.payload.ApiResponse;
+import com.ftms.ftmsapi.repository.EmployeeRepository;
 import com.ftms.ftmsapi.repository.JobRepository;
 import com.ftms.ftmsapi.repository.TimesheetRepository;
 import com.ftms.ftmsapi.repository.UserRepository;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class EmployeeController {
     @Autowired
-    UserRepository userRepository;
+    EmployeeRepository employeeRepository;
 
     @Autowired
     TimesheetRepository timesheetRepository;
@@ -52,16 +52,16 @@ public class EmployeeController {
     // Get all employees that are not an administrator
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("")
-    public List<User> getAllEmployees() {
-        ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
-        ArrayList<User> nonAdmin = new ArrayList<>();
-        // For every user
-        for (User user: users) {
+    public List<Employee> getAllEmployees() {
+        ArrayList<Employee> employees = (ArrayList<Employee>) employeeRepository.findAll();
+        ArrayList<Employee> nonAdmin = new ArrayList<>();
+        // For every Employee
+        for (Employee employee: employees) {
             // if not an admin
-            if (user.getRole().equals("ROLE_EMPLOYEE") ||
-                    user.getRole().equals("ROLE_SUPERVISOR")) {
-                // add to list of users to display
-                nonAdmin.add(user);
+            if (employee.getRole().equals("ROLE_EMPLOYEE") ||
+                    employee.getRole().equals("ROLE_SUPERVISOR")) {
+                // add to list of employees to display
+                nonAdmin.add(employee);
             }
         }
         System.out.println(nonAdmin);
@@ -71,18 +71,19 @@ public class EmployeeController {
     // Create a new employee.
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("")
-    public User createEmployee(@Valid @RequestBody User user) {
-        // Hashing User id
-        User createdUser = userRepository.save(user);
-        String id = hashids.encode(createdUser.getId());
-        String message = "Hello" + " " + user.getFirstname() + " " + user.getLastname() + ", \n\n" +
-        "We’re excited to welcome you to the company. Please follow this link to set your account up: " +
-        "http://localhost:3000/usersignup/" + id + 
-        "\n If you encounter any problems, please contact admin." +
-        "\n\n - Nor-Weld";
-
-        emailService.prepareAndSend(createdUser.getEmail(), "Account Activation", message);
-        return userRepository.save(createdUser);
+    public Employee createEmployee(@Valid @RequestBody Employee employee) {
+        // Hashing Employee id
+        Employee createdEmployee = employeeRepository.save(employee);
+        String id = hashids.encode(createdEmployee.getId());
+        String message = "Hello" + " " + employee.getFirstname() + " " + employee.getLastname() + ", \n\n" +
+                "We’re excited to welcome you to the company. Please follow this link to set your account up: " +
+                "http://localhost:3000/usersignup/" + id +
+                "\n If you encounter any problems, please contact admin." +
+                "\n\n - Nor-Weld";
+        emailService.prepareAndSend(createdEmployee.getEmail(),
+                "Account Activation",
+                message);
+        return employeeRepository.save(createdEmployee);
     }
 
     // Delete an employee.
@@ -91,8 +92,8 @@ public class EmployeeController {
     public ResponseEntity<?> deleteEmployee (@PathVariable Long id) {
         try {
             // Try to look for employee by <id>
-            User employee = userRepository.getOne(id);
-            userRepository.delete(employee);
+            Employee employee = employeeRepository.getOne(id);
+            employeeRepository.deleteById(employee.getId());
             return new ResponseEntity<Object>(new ApiResponse(true, employee.getFirstname()
                                     + " " + employee.getLastname() + " deleted!"), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
@@ -121,14 +122,14 @@ public class EmployeeController {
 
         String failure = "Cannot find EMPLOYEE #" + id.toString();
         try {
-            // Try to find the user by <id>
-            User findUser = userRepository.getOne(id);
+            // Try to find the Employee by <id>
+            Employee findEmployee = employeeRepository.getOne(id);
 
             // Success: set the info to new info
-            findUser.setFirstname(firstName);
-            findUser.setLastname(lastName);
-            findUser.setNumber(phone);
-            userRepository.save(findUser);
+            findEmployee.setFirstname(firstName);
+            findEmployee.setLastname(lastName);
+            findEmployee.setNumber(phone);
+            employeeRepository.save(findEmployee);
             return new ResponseEntity<Object>(new ApiResponse(true, success), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             // If cannot find, return bad request response
@@ -141,7 +142,7 @@ public class EmployeeController {
         ArrayList<Job> jobs = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
 
-        User user = userRepository.findById(id).orElse(null);
+        Employee user = employeeRepository.findById(id).orElse(null);
         //Check if user is found
         if (user == null) {
             System.out.println("User not found!");
@@ -150,7 +151,7 @@ public class EmployeeController {
             for (Timesheet timesheet : timesheets) {
                 if (timesheet.getEmployeeId().equals(id)) {
                     Job job = jobRepository.findById(timesheet.getJobId()).orElse(null);
-                    jobs.add(job); 
+                    jobs.add(job);
                 }
             }
         }

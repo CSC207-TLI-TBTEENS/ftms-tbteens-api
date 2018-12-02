@@ -1,8 +1,10 @@
 package com.ftms.ftmsapi.controller;
 
-import com.ftms.ftmsapi.exception.ResourceNotFoundException;
+import com.ftms.ftmsapi.model.ClientUser;
 import com.ftms.ftmsapi.model.Company;
 import com.ftms.ftmsapi.repository.CompanyRepository;
+import com.ftms.ftmsapi.services.EmailService;
+import org.hashids.Hashids;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,11 @@ public class CompanyController {
     @Autowired
     CompanyRepository companyRepository;
 
+    @Autowired
+    private EmailService emailService;
+
+    Hashids hashids = new Hashids("FTMS", 10);
+
     // Get all companies
     @GetMapping("")
     public List<Company> getAllCompanies() {
@@ -30,7 +37,18 @@ public class CompanyController {
     // Create a new company
     @PostMapping("")
     public Company createCompany(@Valid @RequestBody Company company) {
-        return companyRepository.save(company);
+        // Hashing ClientUser id
+        Company createdCompany = companyRepository.save(company);
+        String id = hashids.encode(createdCompany.getId());
+        String message = "Welcome " + company.getName()  +
+                "\n We’re excited you chose Norweld. Please follow this link to set " +
+                "up your company account: " +
+                "http://localhost:3000/companysignup/" + id +
+                "\n If you encounter any problems, please contact admin." +
+                "\n\n - Nor-Weld";
+        emailService.prepareAndSend(createdCompany.getEmail(),
+                "Welcome Email", message);
+        return createdCompany;
     }
 
     // Delete a company
