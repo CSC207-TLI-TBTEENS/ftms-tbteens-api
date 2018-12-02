@@ -21,7 +21,11 @@ public class CompanyController {
     @Autowired
     CompanyRepository companyRepository;
 
-    // Get all companies
+    /**
+     * Get all companies in a list.
+     *
+     * @return A list containing all companies.
+     */
     @GetMapping("")
     public List<Company> getAllCompanies() {
         return companyRepository.findAll();
