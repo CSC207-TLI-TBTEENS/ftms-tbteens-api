@@ -52,6 +52,11 @@ public class Task implements Serializable{
         this.employee = employee;
     }
 
+    /**
+     * Getter for job.
+     *
+     * @return The job.
+     */
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     public Job getJob() {
