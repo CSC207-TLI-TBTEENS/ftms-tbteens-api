@@ -9,11 +9,14 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import javax.xml.ws.Response;
 import java.util.HashMap;
 
 @RestController
@@ -24,6 +27,9 @@ public class RecoveryController {
 
     @Autowired
     RecoveryCodeService recoveryCodeService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     // Verify the information given when trying to recover a password
     @PostMapping("/password")
@@ -103,5 +109,51 @@ public class RecoveryController {
         }
     }
 
+    @PostMapping("/getuserid/name")
+    public ResponseEntity<?> getUserIdByName(@Valid @RequestBody String names) {
+        JSONObject userInfo = new JSONObject(names);
+        String firstName = userInfo.get("firstname").toString();
+        String lastName = userInfo.get("lastname").toString();
+
+        for (User user : userRepository.findAll()) {
+            if (user.getFirstname().equals(firstName) && user.getLastname().equals(lastName)) {
+                return new ResponseEntity<>(user.getId(), HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/getuserid/email")
+    public ResponseEntity<?> getUserIdByEmail(@Valid @RequestBody String email) {
+        JSONObject userInfo = new JSONObject(email);
+        String emailInfo = userInfo.get("email").toString();
+
+        for (User user : userRepository.findAll()) {
+            if (user.getEmail().equals(emailInfo)) {
+                return new ResponseEntity<>(user.getId(), HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/changepassword")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody String info) {
+        JSONObject userInfo = new JSONObject(info);
+        String passwordEntered = userInfo.get("password").toString();
+        long userId = Long.parseLong(userInfo.get("id").toString());
+
+        try {
+            User user = userRepository.getOne(userId);
+            user.setPassword(passwordEncoder.encode(passwordEntered));
+            userRepository.save(user);
+            return new ResponseEntity<Object>(new ApiResponse(true,
+                    "Password changed successfully!"),
+                    HttpStatus.OK);
+        } catch (EntityNotFoundException error) {
+            return new ResponseEntity<Object>(new ApiResponse(false,
+                    "Cannot find employee #" + userId + "!"),
+                    HttpStatus.OK);
+        }
+    }
 
 }

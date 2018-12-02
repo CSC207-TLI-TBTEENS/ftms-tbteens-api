@@ -62,8 +62,6 @@ public class JobController {
         return employees;
     }
 
-
-
     @GetMapping("/timesheets/jobs")
     public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Long job_id) {
         ArrayList<Timesheet> timesheetsJob = new ArrayList<>();

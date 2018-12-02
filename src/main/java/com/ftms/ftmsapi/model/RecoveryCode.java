@@ -32,6 +32,8 @@ public class RecoveryCode implements Serializable {
         this.used = false;
     }
 
+    public RecoveryCode() {}
+
     public Date getCreatedAt() {
         return createdAt;
     }
