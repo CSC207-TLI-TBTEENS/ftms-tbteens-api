@@ -96,7 +96,11 @@ public class JobController {
         return timesheetsJob;
     }
 
-    // Create a new Job
+    /**
+     * Saves the job job to the repository.
+     * @param job The job to be saved.
+     * @return The job saved.
+     */
     @PostMapping("/jobs")
     public Job createJob(@Valid @RequestBody Job job) {
         return jobRepository.save(job);
