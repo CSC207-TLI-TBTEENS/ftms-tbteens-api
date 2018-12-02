@@ -81,6 +81,11 @@ public class Task implements Serializable{
         return description;
     }
 
+    /**
+     * The setter for description.
+     *
+     * @param description The description to be changed.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
