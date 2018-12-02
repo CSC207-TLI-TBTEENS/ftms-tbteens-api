@@ -195,7 +195,12 @@ public class NotificationController {
         return result;
     }
 
-    // Delete a notification by looking for it by ID
+    /**
+     * Delete the notification of ID id, and then return the system response entity.
+     *
+     * @param id The ID of the notification to be deleted.
+     * @return The system response entity.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNotificationById(@PathVariable Long id) {
         try {
