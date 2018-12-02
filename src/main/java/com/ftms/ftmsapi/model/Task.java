@@ -24,7 +24,7 @@ public class Task implements Serializable{
     // GETTERS/SETTERS
 
     /**
-     * Getter of ID
+     * Getter for ID
      *
      * @return The ID of this.
      */
@@ -33,7 +33,7 @@ public class Task implements Serializable{
     }
 
     /**
-     * Getter of employee.
+     * Getter for employee.
      *
      * @return The id.
      */
@@ -43,6 +43,11 @@ public class Task implements Serializable{
         return employee;
     }
 
+    /**
+     * Setter for employee.
+     *
+     * @param employee The employee to be changed.
+     */
     public void setEmployee(User employee) {
         this.employee = employee;
     }
