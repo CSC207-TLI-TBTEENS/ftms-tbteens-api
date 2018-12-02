@@ -141,6 +141,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    /**
+     * Getter for number.
+     *
+     * @return The number.
+     */
     public String getNumber() {
         return number;
     }
