@@ -19,46 +19,93 @@ public class Job implements Serializable{
 
     @NotBlank
     private String description;
+    private String siteName;
 
     private Company company;
 
-    private String siteName;
+    
 
     // GETTERS/SETTERS
+
+    /**
+     * Getter for job title.
+     *
+     * @return Job title.
+     */
     public String getJobTitle() {
         return this.jobTitle;
     }
 
+    /**
+     * Setter for job title.
+     *
+     * @param title The title to be changed.
+     */
     public void setJobTitle(String title) {
         this.jobTitle = title;
     }
 
+    /**
+     * Getter for id
+     *
+     * @return The id.
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Getter for description.
+     *
+     * @return The description.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Setter for description.
+     *
+     * @param description The description to be changed.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Getter for company.
+     *
+     * @return The company.
+     */
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @JoinColumn(name = "company_id")
     public Company getCompany() {
         return company;
     }
 
+    /**
+     * Setter for company.
+     *
+     * @param company The company to be set.
+     */
     public void setCompany(Company company) {
         this.company = company;
     }
 
+    /**
+     * Getter for site name.
+     *
+     * @return The site name.
+     */
     public String getSiteName() {
         return siteName;
     }
 
+    /**
+     * Setter for site name.
+     *
+     * @param siteName The site name to be changed.
+     */
     public void setSiteName(String siteName) {
         this.siteName = siteName;
     }

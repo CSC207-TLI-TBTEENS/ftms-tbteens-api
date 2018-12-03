@@ -38,16 +38,21 @@ public class JobController {
     @Autowired
     TimesheetController timesheetController;
     @Autowired
-    UserRepository userRepository;
- 
-    @PostMapping("/jobs/employees")
-    public List<User> retrieveEmployeeFromJobs(@Valid @RequestBody Job job) {
-        System.out.println(job.getJobTitle());
-        System.out.println(job);
-        ArrayList<User> employees = new ArrayList<>();
-        List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(job);
+    UserRepository<User> userRepository;
 
-        Job storedjob = jobRepository.findById(job.getId()).orElse(null);
+    /**
+     * Return all the employees involved in the job with ID id in a list.
+     *
+     * @param id The ID of the job.
+     * @return The list of employees from the job.
+     */
+    @GetMapping("/jobs/employees/{id}")
+    public List<User> retrieveEmployeeFromJobs(@PathVariable Long id) {
+
+        ArrayList<User> employees = new ArrayList<>();
+        List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(id);
+
+        Job storedjob = jobRepository.findById(id).orElse(null);
         
         
         if (storedjob == null) {
@@ -63,21 +68,25 @@ public class JobController {
         return employees;
     }
 
-
-
+    /**
+     * Return all the timesheets related to the job with ID job_id in a list.
+     *
+     * @param job_id The ID of the job we want to check.
+     * @return A list containing all the timesheets related to the job.
+     */
     @GetMapping("/timesheets/jobs")
-    public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Job job) {
+    public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Long job_id) {
         ArrayList<Timesheet> timesheetsJob = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
 
-        Job storedjob = jobRepository.findById(job.getId()).orElse(null);
+        Job storedjob = jobRepository.findById(job_id).orElse(null);
 
         if (storedjob == null) {
             System.out.println("Job not found!");
         }
         else {
             for (Timesheet timesheet : timesheets) {
-                if (timesheet.getJobId() == job.getId()){
+                if (timesheet.getJobId() == job_id){
                     timesheetsJob.add(timesheet);
                 }
                 
@@ -87,15 +96,25 @@ public class JobController {
         return timesheetsJob;
     }
 
-    // Create a new Job
+    /**
+     * Saves the job job to the repository.
+     * @param job The job to be saved.
+     * @return The job saved.
+     */
     @PostMapping("/jobs")
     public Job createJob(@Valid @RequestBody Job job) {
         return jobRepository.save(job);
     }
 
+    /**
+     * Assign a job.
+     *
+     * @param selection The selection to assign.
+     */
     @PutMapping("/jobsassign")
     void assignJob(@Valid @RequestBody Selection selection) {
         Timesheet timesheet = new Timesheet();
+        
         timesheet.setJobId(selection.getJob().getId());
         timesheet.setEmployeeId(selection.getEmployee().getId());
         timesheet.setApprovalStatus("Not reviewed");
@@ -103,12 +122,22 @@ public class JobController {
 
     }
 
-    // Get all Jobs
+    /**
+     * Return a list containing all jobs.
+     *
+     * @return A list containing all jobs.
+     */
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
     }
-    
+
+    /**
+     * Delete the employee with ID id, and then return its response entity.
+     *
+     * @param id The ID of the employee.
+     * @return The response entity from the system.
+     */
     @DeleteMapping("/jobs/{id}")
     public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
         try {
