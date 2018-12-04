@@ -1,5 +1,6 @@
 package com.ftms.ftmsapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name="jobs")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Job implements Serializable{
     // INSTANCE FIELDS
     @Id
@@ -21,9 +23,21 @@ public class Job implements Serializable{
     private String description;
     private String siteName;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
     private Company company;
 
-    
+    public Job() {
+
+    }
+
+    public Job(String jobTitle, String description, String siteName,
+               Company company) {
+        this.jobTitle = jobTitle;
+        this.description = description;
+        this.siteName = siteName;
+        this.company = company;
+    }
 
     // GETTERS/SETTERS
 
@@ -78,7 +92,7 @@ public class Job implements Serializable{
      * @return The company.
      */
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
+    @MapsId
     public Company getCompany() {
         return company;
     }
@@ -88,6 +102,8 @@ public class Job implements Serializable{
      *
      * @param company The company to be set.
      */
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
     public void setCompany(Company company) {
         this.company = company;
     }
