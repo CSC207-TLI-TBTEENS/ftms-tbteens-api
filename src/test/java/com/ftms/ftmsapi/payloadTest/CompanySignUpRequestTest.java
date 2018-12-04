@@ -1,5 +1,6 @@
 package com.ftms.ftmsapi.payloadTest;
 
+import com.ftms.ftmsapi.payload.CompanySignUpRequest;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -7,50 +8,44 @@ import static org.junit.Assert.*;
 public class CompanySignUpRequestTest {
 
     @Test
-    public void getId() {
+    public void testId() {
+        CompanySignUpRequest request = new CompanySignUpRequest();
+        request.setId("new id");
+        assertEquals(request.getId(), "new id");
     }
 
     @Test
-    public void setId() {
+    public void testFirstname() {
+        CompanySignUpRequest request = new CompanySignUpRequest();
+        request.setFirstname("Ece");
+        assertEquals(request.getFirstname(), "Ece");
     }
 
     @Test
-    public void getFirstname() {
+    public void testLastname() {
+        CompanySignUpRequest request = new CompanySignUpRequest();
+        request.setLastname("Yucer");
+        assertEquals(request.getLastname(), "Yucer");
     }
 
     @Test
-    public void setFirstname() {
+    public void testNumber() {
+        CompanySignUpRequest request = new CompanySignUpRequest();
+        request.setNumber("666-666-6666");
+        assertEquals(request.getNumber(), "666-666-6666");
     }
 
     @Test
-    public void getLastname() {
+    public void testEmail() {
+        CompanySignUpRequest request = new CompanySignUpRequest();
+        request.setEmail("eceyucer@gmail.com");
+        assertEquals(request.getEmail(), "eceyucer@gmail.com");
     }
 
     @Test
-    public void setLastname() {
-    }
-
-    @Test
-    public void getNumber() {
-    }
-
-    @Test
-    public void setNumber() {
-    }
-
-    @Test
-    public void getEmail() {
-    }
-
-    @Test
-    public void setEmail() {
-    }
-
-    @Test
-    public void getPassword() {
-    }
-
-    @Test
-    public void setPassword() {
+    public void testPassword() {
+        CompanySignUpRequest request = new CompanySignUpRequest();
+        request.setPassword("abcd34");
+        assertEquals(request.getPassword(), "abcd34");
     }
 }
