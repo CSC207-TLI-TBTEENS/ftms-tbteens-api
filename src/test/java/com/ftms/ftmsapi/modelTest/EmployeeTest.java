@@ -65,11 +65,9 @@ public class EmployeeTest {
     @Test
     public void testActive(){
         Employee employee = new Employee();
-        boolean activitation = true;
-        boolean activitation2 = false;
-        employee.setActive(activitation);
+        employee.setActive(true);
         assertTrue(employee.getActive());
-        employee.setActive(activitation2);
+        employee.setActive(false);
         assertFalse(employee.getActive());
     }
 

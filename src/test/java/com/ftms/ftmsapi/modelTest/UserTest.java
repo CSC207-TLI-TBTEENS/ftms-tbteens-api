@@ -65,11 +65,9 @@ public class UserTest {
     @Test
     public void testActive(){
         User user = new User();
-        boolean activitation = true;
-        boolean activitation2 = false;
-        user.setActive(activitation);
+        user.setActive(true);
         assertTrue(user.getActive());
-        user.setActive(activitation2);
+        user.setActive(false);
         assertFalse(user.getActive());
     }
 
