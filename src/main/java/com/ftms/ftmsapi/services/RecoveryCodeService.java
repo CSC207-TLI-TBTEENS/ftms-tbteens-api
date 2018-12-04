@@ -41,7 +41,7 @@ public class RecoveryCodeService {
             StringBuilder code = new StringBuilder();
 
             while (code.length() < 10) {
-                int character = (int) Math.floor(Math.random() * code.length());
+                int character = (int) Math.floor(Math.random() * alphabet.length());
                 code.append(alphabet.charAt(character));
             }
 
@@ -85,6 +85,6 @@ public class RecoveryCodeService {
 
         emailService.prepareAndSend(email,
                 "Account Recovery",
-                "The following is your recovery code: " + code + " .It will only be valid for 1 hour.");
+                "The following is your recovery code: " + code + ". It will only be valid for 1 hour.");
     }
 }

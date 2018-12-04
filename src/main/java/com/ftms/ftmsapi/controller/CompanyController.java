@@ -90,9 +90,9 @@ public class CompanyController {
      * @return An empty list.
      */
     @PutMapping("/{id}")
-    public List<String> editCompany (@PathVariable Long id, @RequestParam String name,
-                                     @RequestParam String logo, @RequestParam String email,
-                                     @RequestParam String phone) {
+    public ResponseEntity<?> editCompany (@PathVariable Long id, @RequestParam String name,
+                                               @RequestParam String logo, @RequestParam String email,
+                                               @RequestParam String phone) {
         ArrayList<String> value = new ArrayList<>();
         try {
             Company findCompany = companyRepository.getOne(id);
@@ -102,11 +102,9 @@ public class CompanyController {
             findCompany.setNumber(phone);
             System.out.println(findCompany.getName());
             companyRepository.save(findCompany);
-            return value;
-//            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (EntityNotFoundException e) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            return value;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }
