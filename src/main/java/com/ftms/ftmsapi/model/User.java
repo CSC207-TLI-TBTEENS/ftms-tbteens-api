@@ -3,10 +3,11 @@ package com.ftms.ftmsapi.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Email;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.NaturalId;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -14,6 +15,9 @@ import java.util.Set;
                 "email"
         })
 })
+@Inheritance( strategy = InheritanceType.SINGLE_TABLE )
+@DiscriminatorColumn( name = "user_type" )
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements Serializable {
 
     @Id
@@ -36,26 +40,23 @@ public class User implements Serializable {
 
     private boolean active;
 
-
-    @NotBlank
+    @JsonIgnore
     private String password;
 
     @NotBlank
     private String role;
 
     public User () {
-        this.active = true;
+        this.active = false;
     }
 
-    public User(String fname, String lname, String email, String number,
-                String password, String role){
+    public User(String fname, String lname, String email, String number, String role){
         this.firstname = fname;
         this.lastname = lname;
         this.email = email;
-        this.password = password;
         this.number = number;
         this.role = role;
-        this.active = true;
+        this.active = false;
     }
 
     public Long getId() {

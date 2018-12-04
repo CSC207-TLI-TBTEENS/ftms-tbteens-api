@@ -1,8 +1,10 @@
 package com.ftms.ftmsapi.controller;
 
-import com.ftms.ftmsapi.exception.ResourceNotFoundException;
+import com.ftms.ftmsapi.model.ClientUser;
 import com.ftms.ftmsapi.model.Company;
 import com.ftms.ftmsapi.repository.CompanyRepository;
+import com.ftms.ftmsapi.services.EmailService;
+import org.hashids.Hashids;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
@@ -15,26 +17,56 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/companies")
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class CompanyController {
     @Autowired
     CompanyRepository companyRepository;
 
-    // Get all companies
-    @GetMapping("/companies")
+    @Autowired
+    private EmailService emailService;
+
+    Hashids hashids = new Hashids("FTMS", 10);
+
+    /**
+     * Get all companies in a list.
+     *
+     * @return A list containing all companies.
+     */
+    @GetMapping("")
     public List<Company> getAllCompanies() {
         return companyRepository.findAll();
     }
 
-    // Create a new company
-    @PostMapping("/companies")
+    /**
+     * Save company to the repository and then return it.
+     *
+     * @param company The company to be saved.
+     * @return
+     */
+    @PostMapping("")
     public Company createCompany(@Valid @RequestBody Company company) {
-        return companyRepository.save(company);
+        // Hashing ClientUser id
+        Company createdCompany = companyRepository.save(company);
+        String id = hashids.encode(createdCompany.getId());
+        String message = "Welcome " + company.getName()  +
+                "\n We’re excited you chose Norweld. Please follow this link to set " +
+                "up your company account: " +
+                "http://localhost:3000/companysignup/" + id +
+                "\n If you encounter any problems, please contact admin." +
+                "\n\n - Nor-Weld";
+        emailService.prepareAndSend(createdCompany.getEmail(),
+                "Welcome Email", message);
+        return createdCompany;
     }
 
-    // Delete a company
-    @DeleteMapping("/companies/{id}")
+    /**
+     * Delete the company with ID id, and then return the response entity.
+     *
+     * @param id The ID of the company to be deleted.
+     * @return The response entity from the system.
+     */
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
         try {
             Company company = companyRepository.getOne(id);
@@ -45,12 +77,23 @@ public class CompanyController {
         }
     }
 
-    @PutMapping("/companies/{id}")
-    public List<String> editCompany (@PathVariable Long id, @RequestParam String name,
-                                     @RequestParam String logo, @RequestParam String email,
-                                     @RequestParam String phone) {
+    /**
+     * Create a new empty list,
+     * Edit the credentials of the company with ID id
+     * AND RETURN THE SAME EMPTY LIST CREATED AT THE BEGINNING.
+     *
+     * @param id The ID of the company to be changed.
+     * @param name The new name of the company.
+     * @param logo The logo of the company.
+     * @param email The email of the company.
+     * @param phone The phone number of the company.
+     * @return An empty list.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editCompany (@PathVariable Long id, @RequestParam String name,
+                                               @RequestParam String logo, @RequestParam String email,
+                                               @RequestParam String phone) {
         ArrayList<String> value = new ArrayList<>();
-        value.add("Hello!");
         try {
             Company findCompany = companyRepository.getOne(id);
             findCompany.setName(name);
@@ -59,11 +102,9 @@ public class CompanyController {
             findCompany.setNumber(phone);
             System.out.println(findCompany.getName());
             companyRepository.save(findCompany);
-            return value;
-//            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (EntityNotFoundException e) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            return value;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

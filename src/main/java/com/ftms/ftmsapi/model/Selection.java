@@ -2,25 +2,20 @@ package com.ftms.ftmsapi.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-
+//For the timesheet creation in jobassignment do not touch
 @Entity
 public class Selection implements Serializable{
     // INSTANCE FIELDS
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
     private User employee;
-
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id")
     private Job job;
 
     /**

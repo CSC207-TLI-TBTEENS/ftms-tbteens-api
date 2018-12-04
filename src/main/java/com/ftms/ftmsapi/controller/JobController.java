@@ -26,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 @RestController
 @RequestMapping("/api")
 public class JobController {
@@ -38,22 +36,25 @@ public class JobController {
     @Autowired
     TimesheetController timesheetController;
     @Autowired
-    UserRepository userRepository;
- 
-    @PostMapping("/jobs/employees")
-    public List<User> retrieveEmployeeFromJobs(@Valid @RequestBody Job job) {
-        System.out.println(job.getJobTitle());
-        System.out.println(job);
-        ArrayList<User> employees = new ArrayList<>();
-        List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(job);
+    UserRepository<User> userRepository;
 
-        Job storedjob = jobRepository.findById(job.getId()).orElse(null);
-        
-        
+    /**
+     * Return all the employees involved in the job with ID id in a list.
+     *
+     * @param id The ID of the job.
+     * @return The list of employees from the job.
+     */
+    @GetMapping("/jobs/employees/{id}")
+    public List<User> retrieveEmployeeFromJobs(@PathVariable Long id) {
+
+        ArrayList<User> employees = new ArrayList<>();
+        List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(id);
+
+        Job storedjob = jobRepository.findById(id).orElse(null);
+
         if (storedjob == null) {
             System.out.println("Job not found!");
-        }
-        else {
+        } else {
             for (Timesheet timesheet : timesheetsJob) {
                 User storedUser = userRepository.findById(timesheet.getEmployeeId()).orElse(null);
                 if (storedUser != null)
@@ -64,54 +65,95 @@ public class JobController {
     }
 
 
-
+    /**
+     * Return all the timesheets related to the job with ID job_id in a list.
+     *
+     * @param job_id The ID of the job we want to check.
+     * @return A list containing all the timesheets related to the job.
+     */
     @GetMapping("/timesheets/jobs")
-    public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Job job) {
+    public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Long job_id) {
         ArrayList<Timesheet> timesheetsJob = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
 
-        Job storedjob = jobRepository.findById(job.getId()).orElse(null);
+        Job storedjob = jobRepository.findById(job_id).orElse(null);
 
         if (storedjob == null) {
             System.out.println("Job not found!");
-        }
-        else {
+        } else {
             for (Timesheet timesheet : timesheets) {
-                if (timesheet.getJobId() == job.getId()){
+                if (timesheet.getJobId() == job_id) {
                     timesheetsJob.add(timesheet);
                 }
-                
+
             }
         }
         System.out.println(timesheetsJob);
         return timesheetsJob;
     }
 
-    // Create a new Job
+    /**
+     * Saves the job job to the repository.
+     * 
+     * @param job The job to be saved.
+     * @return The job saved.
+     */
     @PostMapping("/jobs")
     public Job createJob(@Valid @RequestBody Job job) {
         return jobRepository.save(job);
     }
 
+    /**
+     * Assign a job.
+     *
+     * @param selection The selection to assign.
+     */
     @PutMapping("/jobsassign")
     void assignJob(@Valid @RequestBody Selection selection) {
         Timesheet timesheet = new Timesheet();
-        timesheet.setJobId(selection.getJob().getId());
-        timesheet.setEmployeeId(selection.getEmployee().getId());
-        timesheet.setApprovalStatus("Not reviewed");
-        timesheetController.createTimesheet(timesheet);
+        Long jobId = selection.getJob().getId();
+        Long employeeId = selection.getEmployee().getId();
+        List<Timesheet> timesheets = timesheetRepository.findAll();
+        Boolean exist = false;
+        for (Timesheet storedTimesheet: timesheets){
+            if (storedTimesheet.getEmployeeId() == employeeId && storedTimesheet.getJobId() == jobId){
+                exist = true;
+            }
+        }
+        if (jobId != null && employeeId != null && !exist) {
+            timesheet.setJobId(jobId);
+            timesheet.setEmployeeId(employeeId);
+            timesheet.setApprovalStatus("Not reviewed");
+            timesheetController.createTimesheet(timesheet);
+        }
 
     }
 
-    // Get all Jobs
+    /**
+     * Return a list containing all jobs.
+     *
+     * @return A list containing all jobs.
+     */
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
     }
-    
+
+    /**
+     * Delete the job with ID id, and then return its response entity.
+     *
+     * @param id The ID of the employee.
+     * @return The response entity from the system.
+     */
     @DeleteMapping("/jobs/{id}")
-    public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
+    public ResponseEntity<HttpStatus> deleteJob(@PathVariable Long id) {
         try {
+            List<Timesheet> timesheets = timesheetRepository.findAll();
+            for (Timesheet timesheet : timesheets){
+                if (timesheet.getJobId().equals(id)){
+                    timesheetRepository.delete(timesheet);
+                }
+            }
             Job job = jobRepository.getOne(id);
             jobRepository.delete(job);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -120,5 +162,4 @@ public class JobController {
         }
     }
 
-  
 }

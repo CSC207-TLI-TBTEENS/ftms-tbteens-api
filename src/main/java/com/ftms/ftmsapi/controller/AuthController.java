@@ -1,12 +1,15 @@
 package com.ftms.ftmsapi.controller;
 
-import com.ftms.ftmsapi.model.User;
-import com.ftms.ftmsapi.payload.ApiResponse;
-import com.ftms.ftmsapi.payload.JwtAuthenticationResponse;
-import com.ftms.ftmsapi.payload.LoginRequest;
-import com.ftms.ftmsapi.payload.SignUpRequest;
-import com.ftms.ftmsapi.repository.UserRepository;
+import com.ftms.ftmsapi.model.ClientUser;
+import com.ftms.ftmsapi.model.Company;
+import com.ftms.ftmsapi.model.Employee;
+import com.ftms.ftmsapi.payload.*;
+import com.ftms.ftmsapi.repository.ClientUserRepository;
+import com.ftms.ftmsapi.repository.CompanyRepository;
+import com.ftms.ftmsapi.repository.EmployeeRepository;
 import com.ftms.ftmsapi.security.JwtTokenProvider;
+
+import org.hashids.Hashids;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +18,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 @RestController
@@ -30,13 +31,35 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
+    EmployeeRepository employeeRepository;
+
+    @Autowired
+    ClientUserRepository clientUserRepository;
+
+    @Autowired
+    CompanyRepository companyRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
     @Autowired
     JwtTokenProvider tokenProvider;
+
+    Hashids hashids = new Hashids("FTMS", 10);
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity getEmployee(@PathVariable String id) {
+        // Decoding the user id
+        long[] longId = hashids.decode(id);
+        Long newId = longId[0];
+        try {
+            Employee employee = employeeRepository.getOne(newId);
+            return new ResponseEntity<Object>(employee, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(new ApiResponse(false, "User not found!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -47,34 +70,36 @@ public class AuthController {
                         loginRequest.getPassword()
                 )
         );
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String jwt = tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 
     @PostMapping("/signup")
     public ResponseEntity registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-
         // Creating user's account
-        User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(),
-                signUpRequest.getEmail(), signUpRequest.getNumber(),
-                signUpRequest.getPassword(), signUpRequest.getRole());
+        // Decoding the user id
+        long[] longId = hashids.decode(signUpRequest.getId());
+        Long id = longId[0];
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Employee employee = employeeRepository.getOne(id);
+        employee.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        employee.setActive(true);
+        Employee result = employeeRepository.save(employee);
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
 
-        User result = userRepository.save(user);
-
+    @PostMapping("/companysignup")
+    public ResponseEntity registerCompany(@Valid @RequestBody CompanySignUpRequest signUpRequest) {
+        long[] longId = hashids.decode(signUpRequest.getId());
+        Long id = longId[0];
+        Company company = companyRepository.getOne(id);
+        ClientUser user = new ClientUser(signUpRequest.getFirstname(),
+                signUpRequest.getLastname(), signUpRequest.getEmail(),
+                signUpRequest.getNumber(), "ROLE_CLIENT", company);
+        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        user.setActive(true);
+        ClientUser result = clientUserRepository.save(user);
         return new ResponseEntity<Object>(result, HttpStatus.OK);
     }
 }

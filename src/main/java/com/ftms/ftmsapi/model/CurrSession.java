@@ -46,6 +46,7 @@ import java.io.Serializable;
             this.task = task;
         }
 
+        @NotBlank
         @OneToOne(fetch = FetchType.LAZY)
         @MapsId
         public Task getTask() {
