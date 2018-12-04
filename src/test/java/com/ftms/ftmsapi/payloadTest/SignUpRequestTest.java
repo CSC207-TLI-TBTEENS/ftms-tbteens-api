@@ -9,8 +9,8 @@ public class SignUpRequestTest {
     @Test
     public void testEmail() {
         SignUpRequest newRequest = new SignUpRequest();
-        newRequest.setId(22L);
-        assertEquals(newRequest.getId(), new Long(22));
+        newRequest.setId("22");
+        assertEquals(newRequest.getId(), "22");
     }
 
     @Test
