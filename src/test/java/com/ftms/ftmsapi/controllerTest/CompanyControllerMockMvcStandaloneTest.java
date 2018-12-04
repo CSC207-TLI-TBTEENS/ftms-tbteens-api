@@ -26,10 +26,10 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Company.class , webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+/*@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Company.class , webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) */
 public class CompanyControllerMockMvcStandaloneTest {
-    @LocalServerPort
+  /*  @LocalServerPort
     private int port;
 
     TestRestTemplate restTemplate = new TestRestTemplate();
