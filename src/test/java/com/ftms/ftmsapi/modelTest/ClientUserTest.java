@@ -18,7 +18,7 @@ public class ClientUserTest {
     @Test
     public void testLastName() {
         ClientUser clientUser = new ClientUser();
-        String Lastname = "William";
+        String Lastname = "Williams";
         clientUser.setLastname(Lastname);
         assertEquals(clientUser.getLastname(), "Williams");
     }
