@@ -1,52 +1,43 @@
 package com.ftms.ftmsapi.modelTest;
 
 import org.junit.Test;
+import com.ftms.ftmsapi.model.Notification;
+import java.util.Date;
 
 import static org.junit.Assert.*;
 
 public class NotificationTest {
 
+    Notification notification = new Notification();
     @Test
-    public void getNotificationId() {
+    public void testNotificationId() {
+        notification.setNotificationId(1000L);
+        assertEquals(notification.getNotificationId(), 1000L, 1000L );
     }
 
     @Test
-    public void setNotificationId() {
+    public void testNotificationMessage() {
+        notification.setMessage("Hi Ece!");
+        assertEquals(notification.getMessage(), "Hi Ece!");
     }
 
     @Test
-    public void getMessage() {
+    public void testNotificationCreatedAt() {
+        Date d = new Date();
+        notification.setCreatedAt(d);
+        assertEquals(notification.getCreatedAt(), d);
     }
 
     @Test
-    public void setMessage() {
+    public void testNotificationUserID() {
+        notification.setUserID(1000L);
+        assertEquals(notification.getUserID(), 1000L, 1000L);
     }
 
     @Test
-    public void getCreatedAt() {
+    public void testNotificationRead() {
+        notification.setRead(true);
+        assertEquals(notification.isRead(), true);
     }
 
-    @Test
-    public void setCreatedAt() {
-    }
-
-    @Test
-    public void getUserID() {
-    }
-
-    @Test
-    public void setUserID() {
-    }
-
-    @Test
-    public void getType() {
-    }
-
-    @Test
-    public void isRead() {
-    }
-
-    @Test
-    public void setRead() {
-    }
 }

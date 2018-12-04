@@ -44,4 +44,3 @@ public class CompanyTest {
         assertEquals(company.getNumber(),"111-2222" );
     }
 }
-
