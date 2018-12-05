@@ -10,16 +10,16 @@ public class ClientUserTest {
     @Test
     public void testFirstName(){
         ClientUser clientUser = new ClientUser();
-        String Firstname = "Elias";
-        clientUser.setFirstname(Firstname);
+        String firstname = "Elias";
+        clientUser.setFirstname(firstname);
         assertEquals(clientUser.getFirstname(), "Elias");
     }
 
     @Test
     public void testLastName() {
         ClientUser clientUser = new ClientUser();
-        String Lastname = "Williams";
-        clientUser.setLastname(Lastname);
+        String lastname = "Williams";
+        clientUser.setLastname(lastname);
         assertEquals(clientUser.getLastname(), "Williams");
     }
 
