@@ -79,6 +79,18 @@ public class TimesheetController {
         }
         return jobTimesheet;
     }
+
+    @GetMapping("/timesheets/employee/{employeeID}")
+    public List<Timesheet> getTimesheetByEmployee(@PathVariable Long employeeID){
+        List<Timesheet> timesheets = timesheetRepository.findAll();
+        List<Timesheet> employeeTimesheet = new ArrayList<>();
+        for (Timesheet timesheet: timesheets){
+            if (timesheet.getEmployee().getId().equals(employeeID))
+                employeeTimesheet.add(timesheet);
+        }
+        return employeeTimesheet;
+    }
+    
     /**
      * Approves a timesheet.
      *
