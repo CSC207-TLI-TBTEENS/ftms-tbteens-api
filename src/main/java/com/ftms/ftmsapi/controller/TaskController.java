@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api")
 public class TaskController {
@@ -82,5 +84,10 @@ public class TaskController {
         } catch (EntityNotFoundException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/tasksById/{id}")
+    public Optional<Task> getTaskById(@PathVariable long id){
+        return taskRepository.findById(id);
     }
 }
