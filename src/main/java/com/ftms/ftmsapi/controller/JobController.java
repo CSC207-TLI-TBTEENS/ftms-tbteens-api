@@ -32,6 +32,8 @@ public class JobController {
     @Autowired
     TimesheetRepository timesheetRepository;
     @Autowired
+    TaskRepository taskRepository;
+    @Autowired
     TimesheetController timesheetController;
     @Autowired
     UserRepository<User> userRepository;
@@ -119,8 +121,6 @@ public class JobController {
     public ResponseEntity assignJob(@PathVariable Long jobID, @PathVariable Long employeeID) {
         Timesheet timesheet = new Timesheet();
         List<Timesheet> timesheets = timesheetRepository.findAll();
-        Boolean exist = false;
-        String process = "Fail";
         for (Timesheet storedTimesheet: timesheets){
             if (storedTimesheet.getEmployeeId().equals(employeeID) &&
                     storedTimesheet.getJobId().equals(jobID)){
@@ -130,10 +130,14 @@ public class JobController {
             }
         }
 
-        if (jobID != null && employeeID != null && !exist) {
-            timesheet.setJobId(jobID);
-            timesheet.setEmployeeId(employeeID);
-            timesheet.setApprovalStatus("Not reviewed");
+        if (jobID != null && employeeID != null) {
+            // Finding employee and job based on ID.
+            Employee employee = employeeRepository.getOne(employeeID);
+            Job job = jobRepository.getOne(jobID);
+
+            timesheet.setJob(job);
+            timesheet.setEmployee(employee);
+            timesheet.setApprovalStatus(0);
             timesheetRepository.save(timesheet);
         }
 
@@ -199,10 +203,31 @@ public class JobController {
                 if (timesheet.getJobId().equals(job_id)){
                     timesheetsJob.add(timesheet);
                 }
-
             }
         }
         return timesheetsJob;
+    }
+
+    // Delete jobs from an employee.
+    @DeleteMapping("/jobs/{jobID}/remove/{employeeID}")
+    public ResponseEntity<HttpStatus> deleteEmployeeFromJob(@PathVariable Long jobID, @PathVariable Long employeeID) {
+        try {
+            Employee employee = employeeRepository.getOne(employeeID);
+            Job job = jobRepository.getOne(jobID);
+            List<Timesheet> timesheets = timesheetRepository.findByEmployeeAndJob(employee, job); // Find timesheet by job and employee.
+            for (Timesheet timesheet : timesheets) {
+                    // Finding and removing all tasks associated with the timesheet.
+                    List<Task> tasks = taskRepository.findByTimesheet(timesheet);
+                    for (Task task : tasks) {
+                        taskRepository.delete(task);
+                    }
+                    // Delete the timesheet.
+                    timesheetRepository.delete(timesheet);
+            }
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
