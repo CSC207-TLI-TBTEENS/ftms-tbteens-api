@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import com.ftms.ftmsapi.model.*;
 import com.ftms.ftmsapi.payload.ApiResponse;
 import com.ftms.ftmsapi.payload.CreateJob;
+import com.ftms.ftmsapi.payload.Time;
 import com.ftms.ftmsapi.repository.*;
 
 import com.ftms.ftmsapi.services.EmailService;
@@ -31,6 +32,8 @@ public class JobController {
     JobRepository jobRepository;
     @Autowired
     TimesheetRepository timesheetRepository;
+    @Autowired
+    TaskRepository taskRepository;
     @Autowired
     TimesheetController timesheetController;
     @Autowired
@@ -119,8 +122,6 @@ public class JobController {
     public ResponseEntity assignJob(@PathVariable Long jobID, @PathVariable Long employeeID) {
         Timesheet timesheet = new Timesheet();
         List<Timesheet> timesheets = timesheetRepository.findAll();
-        Boolean exist = false;
-        String process = "Fail";
         for (Timesheet storedTimesheet: timesheets){
             if (storedTimesheet.getEmployeeId().equals(employeeID) &&
                     storedTimesheet.getJobId().equals(jobID)){
@@ -130,10 +131,14 @@ public class JobController {
             }
         }
 
-        if (jobID != null && employeeID != null && !exist) {
-            timesheet.setJobId(jobID);
-            timesheet.setEmployeeId(employeeID);
-            timesheet.setApprovalStatus("Not reviewed");
+        if (jobID != null && employeeID != null) {
+            // Finding employee and job based on ID.
+            Employee employee = employeeRepository.getOne(employeeID);
+            Job job = jobRepository.getOne(jobID);
+
+            timesheet.setJob(job);
+            timesheet.setEmployee(employee);
+            timesheet.setApprovalStatus(0);
             timesheetRepository.save(timesheet);
         }
 
@@ -179,6 +184,18 @@ public class JobController {
         return employees;
     }
 
+    @GetMapping("/jobs/getfromemployee/{id}")
+    public List<Job> retrieveJobsFromEmployee(@PathVariable Long id) {
+        ArrayList<Job> jobs = new ArrayList<>();
+
+        for (Timesheet timesheet : timesheetRepository.findAll()) {
+            if (timesheet.getEmployeeId().equals(id)) {
+                jobs.add(timesheet.getJob());
+            }
+        }
+        return jobs;
+    }
+
     /**
      * Return all the timesheets related to the job with ID job_id in a list.
      *
@@ -199,20 +216,26 @@ public class JobController {
                 if (timesheet.getJobId().equals(job_id)){
                     timesheetsJob.add(timesheet);
                 }
-
             }
         }
         return timesheetsJob;
     }
 
-    @DeleteMapping("/jobs/{jobId}/employees/{employeeId}")
-    public ResponseEntity<HttpStatus> deleteEmployeeFromJob(@PathVariable Long jobId, @PathVariable Long employeeId) {
+    // Delete jobs from an employee.
+    @DeleteMapping("/jobs/{jobID}/remove/{employeeID}")
+    public ResponseEntity<HttpStatus> deleteEmployeeFromJob(@PathVariable Long jobID, @PathVariable Long employeeID) {
         try {
-            List<Timesheet> timesheets = timesheetRepository.findAll();
+            Employee employee = employeeRepository.getOne(employeeID);
+            Job job = jobRepository.getOne(jobID);
+            List<Timesheet> timesheets = timesheetRepository.findByEmployeeAndJob(employee, job); // Find timesheet by job and employee.
             for (Timesheet timesheet : timesheets) {
-                if (timesheet.getJobId().equals(jobId) && timesheet.getEmployeeId().equals(employeeId)) {
+                    // Finding and removing all tasks associated with the timesheet.
+                    List<Task> tasks = taskRepository.findByTimesheet(timesheet);
+                    for (Task task : tasks) {
+                        taskRepository.delete(task);
+                    }
+                    // Delete the timesheet.
                     timesheetRepository.delete(timesheet);
-                }
             }
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (EntityNotFoundException e) {
