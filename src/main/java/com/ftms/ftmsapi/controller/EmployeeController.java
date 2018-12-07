@@ -74,7 +74,7 @@ public class EmployeeController {
         Employee createdEmployee = employeeRepository.save(employee);
         String id = hashids.encode(createdEmployee.getId());
         String content = emailService.getUserRegistrationContent(employee.getFirstname(),
-                "http://localhost:3000/usersignup/" + id);
+                "http://13.71.164.68/usersignup/" + id);
         emailService.sendEmail(employee.getFirstname(), employee.getEmail(), content,
                 "Nor-Weld FTMS Account Registration");
         return employeeRepository.save(createdEmployee);

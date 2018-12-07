@@ -50,7 +50,7 @@ public class CompanyController {
         Company createdCompany = companyRepository.save(company);
         String id = hashids.encode(createdCompany.getId());
         String content = emailService.getCompanyRegistrationContent(createdCompany.getName(),
-                "http://localhost:3000/companysignup/" + id);
+                "http://13.71.164.68/companysignup/" + id);
         emailService.sendEmail(createdCompany.getName(), createdCompany.getEmail(), content,
                 "Nor-Weld Company Account Registration");
         return createdCompany;
