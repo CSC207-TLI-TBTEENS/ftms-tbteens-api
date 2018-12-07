@@ -1,6 +1,5 @@
 package com.ftms.ftmsapi.controller;
 
-import com.ftms.ftmsapi.model.ClientUser;
 import com.ftms.ftmsapi.model.Company;
 import com.ftms.ftmsapi.repository.CompanyRepository;
 import com.ftms.ftmsapi.services.EmailService;
@@ -48,7 +47,7 @@ public class CompanyController {
     public Company createCompany(@Valid @RequestBody Company company) {
         // Hashing ClientUser id
         Company createdCompany = companyRepository.save(company);
-        String id = hashids.encode(createdCompany.getId());
+        String id = hashids.encode(createdCompany.getID());
         String content = emailService.getCompanyRegistrationContent(createdCompany.getName(),
                 "http://localhost:3000/companysignup/" + id);
         emailService.sendEmail(createdCompany.getName(), createdCompany.getEmail(), content,

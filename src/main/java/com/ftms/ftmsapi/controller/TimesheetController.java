@@ -74,7 +74,7 @@ public class TimesheetController {
         List<Timesheet> timesheets = timesheetRepository.findAll();
         List<Timesheet> jobTimesheet = new ArrayList<>();
         for (Timesheet timesheet: timesheets){
-            if (timesheet.getJob().getId().equals(jobID))
+            if (timesheet.getJob().getID().equals(jobID))
                 jobTimesheet.add(timesheet);
         }
         return jobTimesheet;
@@ -85,7 +85,7 @@ public class TimesheetController {
         List<Timesheet> timesheets = timesheetRepository.findAll();
         List<Timesheet> employeeTimesheet = new ArrayList<>();
         for (Timesheet timesheet: timesheets){
-            if (timesheet.getEmployee().getId().equals(employeeID))
+            if (timesheet.getEmployee().getID().equals(employeeID))
                 employeeTimesheet.add(timesheet);
         }
         return employeeTimesheet;

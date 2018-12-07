@@ -78,7 +78,7 @@ public class JobController {
     @GetMapping("/jobs/{timesheet_id}/timesheet")
     public Job retrieveJobFromId(@PathVariable Long timesheet_id) {
         Timesheet timesheet = timesheetRepository.getOne(timesheet_id);
-        return jobRepository.getOne(timesheet.getJobId());
+        return jobRepository.getOne(timesheet.getJobID());
     }
 
 
@@ -93,7 +93,7 @@ public class JobController {
         try {
             List<Timesheet> timesheets = timesheetRepository.findAll();
             for (Timesheet timesheet : timesheets){
-                if (timesheet.getJobId().equals(id)){
+                if (timesheet.getJobID().equals(id)){
                     timesheetRepository.delete(timesheet);
                 }
             }
@@ -122,8 +122,8 @@ public class JobController {
         Timesheet timesheet = new Timesheet();
         List<Timesheet> timesheets = timesheetRepository.findAll();
         for (Timesheet storedTimesheet: timesheets){
-            if (storedTimesheet.getEmployeeId().equals(employeeID) &&
-                    storedTimesheet.getJobId().equals(jobID)){
+            if (storedTimesheet.getEmployeeID().equals(employeeID) &&
+                    storedTimesheet.getJobID().equals(jobID)){
                 return new ResponseEntity<Object>(new ApiResponse(false,
                         "This job has already been assigned to this employee!")
                         , HttpStatus.BAD_REQUEST);
@@ -144,8 +144,8 @@ public class JobController {
         try {
             Job job = jobRepository.getOne(jobID);
             Employee employee = employeeRepository.getOne(employeeID);
-            String content = emailService.getJobAssignmentContent(employee.getFirstname(), job);
-            emailService.sendEmail(employee.getFirstname(), employee.getEmail(),
+            String content = emailService.getJobAssignmentContent(employee.getFirstName(), job);
+            emailService.sendEmail(employee.getFirstName(), employee.getEmail(),
                     content, "New Job Assignment");
             return new ResponseEntity<Object>(new ApiResponse(false,
                     "Job assinged to employee!") , HttpStatus.OK);
@@ -175,7 +175,7 @@ public class JobController {
             System.out.println("Job not found!");
         } else {
             for (Timesheet timesheet : timesheetsJob) {
-                User storedUser = userRepository.findById(timesheet.getEmployeeId()).orElse(null);
+                User storedUser = userRepository.findById(timesheet.getEmployeeID()).orElse(null);
                 if (storedUser != null)
                     employees.add(storedUser);
             }
@@ -200,7 +200,7 @@ public class JobController {
             System.out.println("Job not found!");
         } else {
             for (Timesheet timesheet : timesheets) {
-                if (timesheet.getJobId().equals(job_id)){
+                if (timesheet.getJobID().equals(job_id)){
                     timesheetsJob.add(timesheet);
                 }
             }
