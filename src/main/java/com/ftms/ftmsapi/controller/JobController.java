@@ -189,7 +189,7 @@ public class JobController {
         ArrayList<Job> jobs = new ArrayList<>();
 
         for (Timesheet timesheet : timesheetRepository.findAll()) {
-            if (timesheet.getEmployeeId().equals(id)) {
+            if (timesheet.getEmployeeID().equals(id)) {
                 jobs.add(timesheet.getJob());
             }
         }
