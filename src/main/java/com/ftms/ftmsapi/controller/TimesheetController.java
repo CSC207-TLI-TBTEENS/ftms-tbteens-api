@@ -151,7 +151,7 @@ public class TimesheetController {
         List<Timesheet> timesheetsOfJob = new ArrayList<>();
 
         for (Timesheet timesheet : timesheets) {
-            if (timesheet.getJobId().equals(jobId)) {
+            if (timesheet.getJobID().equals(jobId)) {
                 timesheetsOfJob.add(timesheet);
             }
         }
