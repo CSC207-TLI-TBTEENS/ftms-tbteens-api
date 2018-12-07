@@ -44,7 +44,7 @@ public class ClientUserController {
 
     // Get all client users of company
     @GetMapping("/{companyId}")
-    public List<ClientUser> getAllclientUsersOfCompany(@PathVariable Long companyId) {
+    public List<ClientUser> getAllclientUsersByCompanyID(@PathVariable Long companyId) {
         ArrayList<ClientUser> users = (ArrayList<ClientUser>) clientUserRepository.findAll();
         ArrayList<ClientUser> nonAdmin = new ArrayList<>();
         // For every ClientUser

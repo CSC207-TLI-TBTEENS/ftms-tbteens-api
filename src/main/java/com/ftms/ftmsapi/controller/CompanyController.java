@@ -62,7 +62,7 @@ public class CompanyController {
      * @return The response entity from the system.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteEmployee (@PathVariable Long id) {
+    public ResponseEntity<HttpStatus> deleteCompany(@PathVariable Long id) {
         try {
             Company company = companyRepository.getOne(id);
             companyRepository.delete(company);

@@ -94,7 +94,7 @@ public class RecoveryController {
     }
 
     @GetMapping("/getemail/{id}")
-    public HashMap<String, Object> retrieveEmail(@PathVariable Long id) {
+    public HashMap<String, Object> getEmailByUserID(@PathVariable Long id) {
         try {
             String email = userRepository.getOne(id).getEmail();
             HashMap<String, Object> result = new HashMap<>();
@@ -111,7 +111,7 @@ public class RecoveryController {
     }
 
     @PostMapping("/getuserid/name")
-    public ResponseEntity<?> getUserIdByName(@Valid @RequestBody String names) {
+    public ResponseEntity<?> getUserIDByName(@Valid @RequestBody String names) {
         JSONObject userInfo = new JSONObject(names);
         String firstName = userInfo.get("firstname").toString();
         String lastName = userInfo.get("lastname").toString();
@@ -125,7 +125,7 @@ public class RecoveryController {
     }
 
     @PostMapping("/getuserid/email")
-    public ResponseEntity<?> getUserIdByEmail(@Valid @RequestBody String email) {
+    public ResponseEntity<?> getUserIDByEmail(@Valid @RequestBody String email) {
         JSONObject userInfo = new JSONObject(email);
         String emailInfo = userInfo.get("email").toString();
 

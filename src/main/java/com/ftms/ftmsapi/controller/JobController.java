@@ -76,7 +76,7 @@ public class JobController {
     }
 
     @GetMapping("/jobs/{timesheet_id}/timesheet")
-    public Job retrieveJobFromId(@PathVariable Long timesheet_id) {
+    public Job getJobByTimesheetID(@PathVariable Long timesheet_id) {
         Timesheet timesheet = timesheetRepository.getOne(timesheet_id);
         return jobRepository.getOne(timesheet.getJobID());
     }
@@ -106,7 +106,7 @@ public class JobController {
     }
 
     @GetMapping("/companies/{company_id}/jobs")
-    public ResponseEntity getCompanyJobs(@PathVariable Long company_id) {
+    public ResponseEntity getJobsByCompanyID(@PathVariable Long company_id) {
         try {
             Company company = companyRepository.getOne(company_id);
             List<Job> job = jobRepository.findByCompany(company);
@@ -118,7 +118,7 @@ public class JobController {
     }
 
     @PutMapping("/jobs/{jobID}/assign/{employeeID}")
-    public ResponseEntity assignJob(@PathVariable Long jobID, @PathVariable Long employeeID) {
+    public ResponseEntity assignJobToEmployee(@PathVariable Long jobID, @PathVariable Long employeeID) {
         Timesheet timesheet = new Timesheet();
         List<Timesheet> timesheets = timesheetRepository.findAll();
         for (Timesheet storedTimesheet: timesheets){
@@ -164,10 +164,10 @@ public class JobController {
      * @return The list of employees from the job.
      */
     @GetMapping("/jobs/employees/{id}")
-    public List<User> retrieveEmployeeFromJobs(@PathVariable Long id) {
+    public List<User> getEmployeesByJobID(@PathVariable Long id) {
 
         ArrayList<User> employees = new ArrayList<>();
-        List<Timesheet> timesheetsJob = retrieveTimesheetsFromJob(id);
+        List<Timesheet> timesheetsJob = getTimesheetsByJobID(id);
 
         Job storedjob = jobRepository.findById(id).orElse(null);
 
@@ -190,7 +190,7 @@ public class JobController {
      * @return A list containing all the timesheets related to the job.
      */
     @GetMapping("/timesheets/jobs")
-    public List<Timesheet> retrieveTimesheetsFromJob(@Valid @RequestBody Long job_id) {
+    public List<Timesheet> getTimesheetsByJobID(@Valid @RequestBody Long job_id) {
         ArrayList<Timesheet> timesheetsJob = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
 

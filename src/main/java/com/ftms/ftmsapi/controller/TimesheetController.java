@@ -49,13 +49,13 @@ public class TimesheetController {
      * @return The list of jobs in the timesheet.
      */
     @RequestMapping("/get/job_by_timesheet_id")
-    public List<Job> getJobsByTimesheetId(@Valid @RequestBody Long timesheet_id){
+    public List<Job> getJobsByTimesheetID(@Valid @RequestBody Long timesheet_id){
         return jobRepository.findJobsFromTimesheetId(timesheet_id);
     }
 
     //Get timesheet from job and employee id
     @GetMapping("/timesheets/{employeeID}/{jobID}")
-    public ResponseEntity getTimesheetByEmployeeAndJobId(@PathVariable Long employeeID, @PathVariable Long jobID) {
+    public ResponseEntity getTimesheetByEmployeeAndJobID(@PathVariable Long employeeID, @PathVariable Long jobID) {
         //Making sure the jobID and employeeID are correct.
         try {
             Employee employee = employeeRepository.getOne(employeeID);
@@ -70,7 +70,7 @@ public class TimesheetController {
     }
     
     @GetMapping("/timesheets/{jobID}")
-    public List<Timesheet> getTimesheetByJobs(@PathVariable Long jobID){
+    public List<Timesheet> getTimesheetByJobID(@PathVariable Long jobID){
         List<Timesheet> timesheets = timesheetRepository.findAll();
         List<Timesheet> jobTimesheet = new ArrayList<>();
         for (Timesheet timesheet: timesheets){
@@ -81,7 +81,7 @@ public class TimesheetController {
     }
 
     @GetMapping("/timesheets/employee/{employeeID}")
-    public List<Timesheet> getTimesheetByEmployee(@PathVariable Long employeeID){
+    public List<Timesheet> getTimesheetByEmployeeID(@PathVariable Long employeeID){
         List<Timesheet> timesheets = timesheetRepository.findAll();
         List<Timesheet> employeeTimesheet = new ArrayList<>();
         for (Timesheet timesheet: timesheets){
@@ -94,7 +94,7 @@ public class TimesheetController {
     /**
      * Approves a timesheet.
      *
-     * @param timesheetId The ID of the timesheet to be approved.
+     * @param timesheetID The ID of the timesheet to be approved.
      */
     @PutMapping("/timesheet/approve/{timesheetID}")
     public ResponseEntity approveTimesheet(@PathVariable Long timesheetID) {
@@ -120,7 +120,7 @@ public class TimesheetController {
     /**
      * Reject a timesheet.
      *
-     * @param timesheetId The ID of the timesheet to be rejected.
+     * @param timesheetID The ID of the timesheet to be rejected.
      */
     @PutMapping("/timesheet/reject/{timesheetID}")
     public ResponseEntity rejectTimesheet(@PathVariable Long timesheetID) {

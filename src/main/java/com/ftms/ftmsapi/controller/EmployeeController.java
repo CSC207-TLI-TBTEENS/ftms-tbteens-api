@@ -132,7 +132,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}/jobs")
-    public ResponseEntity<?> retrieveJobsFromEmployee(@PathVariable Long id) {
+    public ResponseEntity<?> retrieveJobsByEmployeeID(@PathVariable Long id) {
         ArrayList<Job> jobs = new ArrayList<>();
         List<Timesheet> timesheets = timesheetRepository.findAll();
 
