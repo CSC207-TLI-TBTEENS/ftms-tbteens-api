@@ -11,6 +11,7 @@ import com.ftms.ftmsapi.repository.TimesheetRepository;
 import com.ftms.ftmsapi.model.Job;
 import com.ftms.ftmsapi.repository.JobRepository;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,10 +71,10 @@ public class TimesheetController {
     }
     
     @GetMapping("/timesheets/{jobID}")
-    public List<Timesheet> getTimesheetByJobs(@PathVariable Long jobID){
+    public List<Timesheet> getTimesheetByJobs(@PathVariable Long jobID) {
         List<Timesheet> timesheets = timesheetRepository.findAll();
         List<Timesheet> jobTimesheet = new ArrayList<>();
-        for (Timesheet timesheet: timesheets){
+        for (Timesheet timesheet : timesheets) {
             if (timesheet.getJob().getId().equals(jobID))
                 jobTimesheet.add(timesheet);
         }
@@ -144,4 +145,23 @@ public class TimesheetController {
         }
     }
 
+    @GetMapping("/timesheet/completion/{jobId}")
+    public ResponseEntity getJobCompletionFromTimesheet(@PathVariable Long jobId) {
+        List<Timesheet> timesheets = timesheetRepository.findAll();
+        List<Timesheet> timesheetsOfJob = new ArrayList<>();
+
+        for (Timesheet timesheet : timesheets) {
+            if (timesheet.getJobId().equals(jobId)) {
+                timesheetsOfJob.add(timesheet);
+            }
+        }
+
+        int done = 0;
+        for (Timesheet timesheet : timesheetsOfJob) {
+            if (timesheet.getApprovalStatus() == 2) {
+                done++;
+            }
+        }
+        return new ResponseEntity<Object>(done/timesheetsOfJob.size(), HttpStatus.ACCEPTED);
+    }
 }
